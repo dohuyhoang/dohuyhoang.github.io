@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Introduce Rackspace Private Cloud Networking</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+
+        <div class="site">
+          <div class="header">
+            <h1 class="title"><a href="/">Your New Jekyll Site</a></h1>
+            <a class="extra" href="/">home</a>
+          </div>
+
+          <h2>Introduce Rackspace Private Cloud Networking</h2>
+<p class="meta">15 Apr 2014</p>
+
+<div class="post">
+<h1>Rackspace Private Cloud networking</h1>
+
+<h2>OpenStack networking concepts</h2>
+
+<p>In OpenStack neutron, there are two types of networks:</p>
+
+<ul>
+<li><p><strong>Provider network</strong>: simply speaking, it is a physical network inside (or between) your DCs. This network is shared between tenants. There are two way of config this network:</p>
+
+<ul>
+<li>Flat (untagged)</li>
+<li>VLAN (tagged)</li>
+</ul></li>
+<li><p><strong>Tenant network</strong>: or virtual network inside connect each tenant. Of course, it is not shared between 2 tenant. However, two tenant network may connect to each other using a Neutron virtual router + L3 (Layer 3) agent. This type of network may be configed using: </p>
+
+<ul>
+<li>vlan (tagged)</li>
+<li>gre (unique id)</li>
+</ul></li>
+</ul>
+
+<h2>Network design</h2>
+
+<h3>Flat network</h3>
+
+<p>Most basic design. Physical network resides in the same broadcast domain.</p>
+
+<p>Check out the <a href="http://www.rackspace.com/knowledge_center/article/about-rackspace-private-cloud">Rackspace knowledge center</a> for more information</p>
+
+</div>
+
+
+          <div class="footer">
+            <div class="contact">
+              <p>
+                Your Name<br />
+                What You Are<br />
+                you@example.com
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/yourusername">github.com/yourusername</a><br />
+                <a href="https://twitter.com/yourusername">twitter.com/yourusername</a><br />
+              </p>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>
