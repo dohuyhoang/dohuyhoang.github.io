@@ -4,7 +4,6 @@ title:  "Introduce Rackspace Private Cloud Networking"
 date:   2014-04-15 13:52:47
 categories: OpenStack Rackspace OpenCloud Networking
 ---
-
 # Rackspace Private Cloud networking
 
 ## OpenStack networking concepts

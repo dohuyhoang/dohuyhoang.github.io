@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>A Cloudy Blog</title>
+		<description></description>
+		<link>/</link>
+		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>Which OpenCloud I choose? OpenStack or CloudStack</title>
+				<description>&lt;h1&gt;OpenCloud vs VMware&lt;/h1&gt;
+
+&lt;p&gt;The most traditional technology for DC virtualization is VMware vCenter. Why I called it &lt;em&gt;traditional&lt;/em&gt;. Because this tool has been developed for a long time, and was adopted by many legacy systems. However, we hardly called it Cloud technology. I have a honor to consult Mr. Thierry Carrez - OpenStack release manager. He gave me an answer that I found the most correct:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Traditional workloads run on servers that are like pets. They are
+unique, you care for them, heal them when they are hurt, have HA in
+place to make sure they survive etc.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Cloud servers are like cattle. They are generic, are set up
+automatically using automation, and when they exhibit signs of failure
+you shoot them.&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;If your goal is to virtualize traditional workloads, you may find VMWare
+offering more attractive, with nice HA / live migration features to
+ensure the survival of your hand-crafted servers.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;If your goal is more to heavily use automation, develops style deployments
+and Amazon AWS like services, then OpenStack is the way to go.&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.slideshare.net/randybias/pets-vs-cattle-the-elastic-cloud-story&quot;&gt;Pet and cattle analogy&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1&gt;Why not CloudStack?&lt;/h1&gt;
+
+&lt;p&gt;CloudStack is the top competitor of OpenStack in OpenCloud market now.&lt;/p&gt;
+
+&lt;p&gt;CloudStack is obvious much product oriented. I think &lt;strong&gt;OpenStack and CloudStack&lt;/strong&gt; is similar to &lt;strong&gt;Windows vs Linux kernel&lt;/strong&gt;. &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Although CloudStack is open-source, but recently report, Citrix contributes more than 50% to the project. &lt;/li&gt;
+&lt;li&gt;While OpenStack has Rackspace, IBM, HP, Redhat, Mirantis are top contributors, and dozen of companies contributes tiny parts. In addition, each platinum contributer has their own product-tested version based on core OpenStack.&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;OpenStack&lt;/h1&gt;
+
+&lt;p&gt;The concept is similar to Linux kernel and Linux distro: OpenStack is a framework (Linux kernel). Some of the companies in that ecosystem package the solution so that it&amp;#39;s ready to use (Linux distro):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Rackspace Private Cloud (Rackspace)&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Linux distributions like Red Hat or Ubuntu (Canonical) have offerings OpenStack package.&lt;/li&gt;
+&lt;li&gt;ENovance (France/Canada) &lt;/li&gt;
+&lt;li&gt;Cloudscaling (US) &lt;/li&gt;
+&lt;li&gt;Mirantis (US/Russia)&lt;/li&gt;
+&lt;li&gt;IBM (commercial version)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Rackspace Private Cloud&lt;/h1&gt;
+
+&lt;p&gt;Rackspace Private Cloud is an OpenStack configuration that has been developed, tested, and packaged by Rackspace OpenStack specialists. Offering that is easy to install, with a configuration that comes from our expertise in developing OpenStack clouds for our customers.&lt;/p&gt;
+
+&lt;h4&gt;Strength&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Easy to install.&lt;/li&gt;
+&lt;li&gt;Well documented.&lt;/li&gt;
+&lt;li&gt;One deployment design (designed HA, networking, etc).&lt;/li&gt;
+&lt;li&gt;Based on latest release version of OpenStack (Havana)&lt;/li&gt;
+&lt;li&gt;Using Chef cookbook.&lt;/li&gt;
+&lt;li&gt;Central forum for discussion. Fast (free) support. &lt;/li&gt;
+&lt;li&gt;Rackspace is the company contributed the most for OpenStack recently.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Weakness&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Not flexible (must follow Rackspace deployment design).&lt;/li&gt;
+&lt;li&gt;Use latest OpenStack release version, not development version.&lt;/li&gt;
+&lt;li&gt;Lack of OpenStack new features (incubating projects). Not sure can we add them manually. &lt;/li&gt;
+&lt;li&gt;Not sure OpenStack third parties extension can work.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+				<pubDate>Tue, 15 Apr 2014 17:52:47 +0200</pubDate>
+				<link>/opencloud/openstack/cloudstack/vmware/2014/04/15/Which-OpenCloud-I-choose.html</link>
+				<guid isPermaLink="true">/opencloud/openstack/cloudstack/vmware/2014/04/15/Which-OpenCloud-I-choose.html</guid>
+			</item>
+		
+			<item>
+				<title>Welcome to Jekyll!</title>
+				<description>&lt;ul&gt;
+&lt;li&gt;hello &lt;/li&gt;
+&lt;li&gt;hello my &lt;strong&gt;best&lt;/strong&gt; friend&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You&amp;#39;ll find this post in your &lt;code&gt;_posts&lt;/code&gt; directory - edit this post and re-build (or run with the &lt;code&gt;-w&lt;/code&gt; switch) to see your changes!
+To add new posts, simply add a file in the &lt;code&gt;_posts&lt;/code&gt; directory that follows the convention: YYYY-MM-DD-name-of-post.ext.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Tom&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &amp;#39;Hi, Tom&amp;#39; to STDOUT.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/mojombo/jekyll&quot;&gt;Jekyll&amp;#39;s GitHub repo&lt;/a&gt;.&lt;/p&gt;
+</description>
+				<pubDate>Tue, 15 Apr 2014 15:52:47 +0200</pubDate>
+				<link>/jekyll/update/2014/04/15/welcome-to-jekyll.html</link>
+				<guid isPermaLink="true">/jekyll/update/2014/04/15/welcome-to-jekyll.html</guid>
+			</item>
+		
+			<item>
+				<title>Introduce Rackspace Private Cloud Networking</title>
+				<description>&lt;h1&gt;Rackspace Private Cloud networking&lt;/h1&gt;
+
+&lt;h2&gt;OpenStack networking concepts&lt;/h2&gt;
+
+&lt;p&gt;In OpenStack neutron, there are two types of networks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Provider network&lt;/strong&gt;: simply speaking, it is a physical network inside (or between) your DCs. This network is shared between tenants. There are two way of config this network:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Flat (untagged)&lt;/li&gt;
+&lt;li&gt;VLAN (tagged)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Tenant network&lt;/strong&gt;: or virtual network inside connect each tenant. Of course, it is not shared between 2 tenant. However, two tenant network may connect to each other using a Neutron virtual router + L3 (Layer 3) agent. This type of network may be configed using: &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;vlan (tagged)&lt;/li&gt;
+&lt;li&gt;gre (unique id)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Network design&lt;/h2&gt;
+
+&lt;h3&gt;Flat network&lt;/h3&gt;
+
+&lt;p&gt;Most basic design. Physical network resides in the same broadcast domain.&lt;/p&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://www.rackspace.com/knowledge_center/article/about-rackspace-private-cloud&quot;&gt;Rackspace knowledge center&lt;/a&gt; for more information&lt;/p&gt;
+</description>
+				<pubDate>Tue, 15 Apr 2014 15:52:47 +0200</pubDate>
+				<link>/openstack/rackspace/opencloud/networking/2014/04/15/Rackspace-private-cloud-networking.html</link>
+				<guid isPermaLink="true">/openstack/rackspace/opencloud/networking/2014/04/15/Rackspace-private-cloud-networking.html</guid>
+			</item>
+		
+	</channel>
+</rss>
