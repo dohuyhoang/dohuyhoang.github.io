@@ -3,7 +3,7 @@
 
 <! -- header.html -->
 <meta charset="utf-8">
-<title>Which OpenCloud I choose? OpenStack or CloudStack</title>
+<title>OpenStack networking designs notes</title>
 
 <meta name="author" content="Hoang Do">
 
@@ -155,7 +155,7 @@
 		<div class="col-sm-9 col-sm-offset-3">
 			<article>
 	<div class="page-header">
-	  <h1>Which OpenCloud I choose? OpenStack or CloudStack </h1>
+	  <h1>OpenStack networking designs notes </h1>
 	</div>
 
 	<div class="col-sm-10">
@@ -167,76 +167,148 @@
 	   2014
 	 </span>
 	  <div class="article_body">
-	  <h1>OpenCloud vs VMware</h1>
+	  <h1>OpenStack networking designs</h1>
 
-<p>The most traditional technology for DC virtualization is VMware vCenter. Why I called it <em>traditional</em>. Because this tool has been developed for a long time, and was adopted by many legacy systems. However, we hardly called it Cloud technology. I have a honor to consult Mr. Thierry Carrez - OpenStack release manager. He gave me an answer that I found the most correct:</p>
+<p>Based on this <a href="http://www.slideshare.net/lowescott/an-introduction-to-openstack-networking">slice</a> of Scott Lowe and my testing results.</p>
 
-<p><em>Traditional workloads run on servers that are like pets. They are
-unique, you care for them, heal them when they are hurt, have HA in
-place to make sure they survive etc.</em></p>
+<h2>What should we know about OpenStack networking</h2>
 
-<p><em>Cloud servers are like cattle. They are generic, are set up
-automatically using automation, and when they exhibit signs of failure
-you shoot them.</em></p>
+<p>There are two types of network in OpenStack Neutron:</p>
 
 <ul>
-<li><em>If your goal is to virtualize traditional workloads, you may find VMWare
-offering more attractive, with nice HA / live migration features to
-ensure the survival of your hand-crafted servers.</em></li>
-<li><em>If your goal is more to heavily use automation, develops style deployments
-and Amazon AWS like services, then OpenStack is the way to go.</em></li>
-</ul>
-
-<p><a href="http://www.slideshare.net/randybias/pets-vs-cattle-the-elastic-cloud-story">Pet and cattle analogy</a></p>
-
-<h1>Why not CloudStack?</h1>
-
-<p>CloudStack is the top competitor of OpenStack in OpenCloud market now.</p>
-
-<p>CloudStack is obvious much product oriented. I think <strong>OpenStack and CloudStack</strong> is similar to <strong>Windows vs Linux kernel</strong>. </p>
+<li><strong>Provider network</strong>: or physical network inside/between DCs. Possible designs:
 
 <ul>
-<li>Although CloudStack is open-source, but recently report, Citrix contributes more than 50% to the project. </li>
-<li>While OpenStack has Rackspace, IBM, HP, Redhat, Mirantis are top contributors, and dozen of companies contributes tiny parts. In addition, each platinum contributer has their own product-tested version based on core OpenStack.<br></li>
-</ul>
-
-<h1>OpenStack</h1>
-
-<p>The concept is similar to Linux kernel and Linux distro: OpenStack is a framework (Linux kernel). Some of the companies in that ecosystem package the solution so that it&#39;s ready to use (Linux distro):</p>
+<li>Flat (untagged): all hosts in the same network domain.</li>
+<li>VLAN (tagged): separate physical broadcast domain by using tagged switch.</li>
+</ul></li>
+<li><strong>Tenant network</strong>: logical network between VMs. Both methods below support separated network.
 
 <ul>
-<li><strong>Rackspace Private Cloud (Rackspace)</strong></li>
-<li>Linux distributions like Red Hat or Ubuntu (Canonical) have offerings OpenStack package.</li>
-<li>ENovance (France/Canada) </li>
-<li>Cloudscaling (US) </li>
-<li>Mirantis (US/Russia)</li>
-<li>IBM (commercial version)</li>
+<li>GRE (unique id)</li>
+<li>VLAN (tagged)
+At least one Provider network must be configured.<br></li>
+</ul></li>
 </ul>
 
-<h1>Rackspace Private Cloud</h1>
+<p><a href="http://developer.rackspace.com/blog/neutron-networking-the-building-blocks-of-an-openstack-cloud.html">Network concepts</a></p>
 
-<p>Rackspace Private Cloud is an OpenStack configuration that has been developed, tested, and packaged by Rackspace OpenStack specialists. Offering that is easy to install, with a configuration that comes from our expertise in developing OpenStack clouds for our customers.</p>
+<h2>Deployment models</h2>
 
-<h4>Strength</h4>
+<h3>Flat network</h3>
+
+<p><strong>How:</strong></p>
 
 <ul>
-<li>Easy to install.</li>
-<li>Well documented.</li>
-<li>One deployment design (designed HA, networking, etc).</li>
-<li>Based on latest release version of OpenStack (Havana)</li>
-<li>Using Chef cookbook.</li>
-<li>Central forum for discussion. Fast (free) support. </li>
-<li>Rackspace is the company contributed the most for OpenStack recently.</li>
+<li>The most simple deployment.</li>
+<li>Use only one provider network. </li>
+<li>Don&#39;t use any tenant network at all. All tenants share an IP pool.</li>
+<li>VMs get IPs directly from provider network.</li>
+<li>No need any neutron function.</li>
 </ul>
 
-<h4>Weakness</h4>
+<p><strong>Good:</strong></p>
 
 <ul>
-<li>Not flexible (must follow Rackspace deployment design).</li>
-<li>Use latest OpenStack release version, not development version.</li>
-<li>Lack of OpenStack new features (incubating projects). Not sure can we add them manually. </li>
-<li>Not sure OpenStack third parties extension can work.</li>
+<li>Simple, can use for testing</li>
 </ul>
+
+<p><strong>Bad:</strong></p>
+
+<ul>
+<li>One broadcast domain. </li>
+<li>Sniffing packets of other tenants.</li>
+</ul>
+
+<h3>Multiple flat network</h3>
+
+<p><strong>How:</strong></p>
+
+<ul>
+<li>Use VLAN (need physical switch support) to separate Provider networks.</li>
+<li>Multiple providers networks</li>
+<li><strong>Note:</strong> one VM can lay on two VLAN by configuring two IPs for it.</li>
+</ul>
+
+<p><strong>Good:</strong></p>
+
+<ul>
+<li>Network separation between tenant. Congrat!</li>
+<li>Multiple broadcast domains</li>
+</ul>
+
+<p><strong>Bad:</strong></p>
+
+<ul>
+<li>Need hardware configuration (Switch)</li>
+<li>Scaling needs configuring HW (create new VLAN)</li>
+<li>Creating new tenant networks needs configuring HW (omg T.T)</li>
+</ul>
+
+<h3>Mixed flat and private network</h3>
+
+<p><strong>How:</strong></p>
+
+<ul>
+<li>Based on one flat network model: one provider network.</li>
+<li>Don&#39;t use Neutron router. </li>
+<li>Each VM has private IP.</li>
+<li>Traffic is encapsulate for tenant network communication. Ensure the security, but the broadcast domain is not separated.</li>
+<li>They may use some Linux Bridge/IPSec technologies, I&#39;m not sure.</li>
+</ul>
+
+<h3>One Neutron router in front of private (tenant) networks</h3>
+
+<p><strong>How:</strong></p>
+
+<ul>
+<li>Based on Mixed flat and private network, no use physical switch (physical VLAN)</li>
+<li>Put a Neutron router (virtual router) in front of private networks.</li>
+</ul>
+
+<p><strong>Good:</strong></p>
+
+<ul>
+<li>Separate traffic between tenants</li>
+</ul>
+
+<p><strong>Bad:</strong></p>
+
+<ul>
+<li>Each tenant has one private network. </li>
+<li>Tenant may create two private networks, but there traffic is not separated.</li>
+<li>Now we separate the term tenant and private network: one tenant in OpenStack equivalent with a project. One project may need more than one users working on. So each tenant may need several private networks.</li>
+</ul>
+
+<h3>Each tenant has one Neutron router</h3>
+
+<p><strong>How:</strong></p>
+
+<ul>
+<li>The headline already describes it</li>
+</ul>
+
+<p><strong>Good:</strong></p>
+
+<ul>
+<li>Separate traffic between tenants</li>
+<li>Separate traffic between private network inside tenants</li>
+</ul>
+
+<p><strong>Ugly:</strong></p>
+
+<ul>
+<li>Don&#39;t know yet, I&#39;m on the way of testing</li>
+</ul>
+
+<h3>That&#39;s the theorical design, now get back to the ugly earth</h3>
+
+<ul>
+<li>If hosts lay on multiple data centers (DCs), is the last model has any problems?</li>
+<li>All models above can use one or two or three NICs. Idealy, they want to separate management network with the network we are discussing. But what if we have only one NIC?</li>
+</ul>
+
+<p>Based on <a href="http://docs.openstack.org/trunk/openstack-ops/content/network_design.html">this</a>, A management network (a separate network for use by your cloud operators), typically consisting of a separate switch and separate NICs (network interface cards), is a recommended option. This segregation prevents system administration and the monitoring of system access from being disrupted by traffic generated by guests. What we were talking above is Data Network between guests.</p>
 
 	  </div>
 
@@ -246,23 +318,13 @@ and Amazon AWS like services, then OpenStack is the way to go.</em></li>
 		  
 		  
 			 
-				<li><a href="/categories.html#opencloud-ref">
-					opencloud <span>(2)</span>
-					,
-				</a></li>
-			 
 				<li><a href="/categories.html#openstack-ref">
 					openstack <span>(4)</span>
 					,
 				</a></li>
 			 
-				<li><a href="/categories.html#cloudstack-ref">
-					cloudstack <span>(1)</span>
-					,
-				</a></li>
-			 
-				<li><a href="/categories.html#vmware-ref">
-					vmware <span>(1)</span>
+				<li><a href="/categories.html#networking-ref">
+					networking <span>(2)</span>
 					
 				</a></li>
 			
@@ -276,10 +338,10 @@ and Amazon AWS like services, then OpenStack is the way to go.</em></li>
 
 		<ul class="pager">
 		  
-		  <li class="previous"><a href="/jekyll/update/2014/04/15/welcome-to-jekyll.html" title="Welcome to Jekyll!">&larr; Previous</a></li>
+		  <li class="previous disabled"><a>&larr; Previous</a></li>
 		  
 		  
-			<li class="next disabled"><a>Next &rarr;</a>
+		  <li class="next"><a href="/openstack/chef/rackspace/2014/04/15/Rackspace-chef-environment.html" title="My Rackspace chef environment">Next &rarr;</a></li>
 		  
 		</ul>
 

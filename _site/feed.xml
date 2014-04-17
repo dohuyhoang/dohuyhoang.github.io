@@ -146,5 +146,207 @@ To add new posts, simply add a file in the &lt;code&gt;_posts&lt;/code&gt; direc
 				<guid isPermaLink="true">/openstack/rackspace/opencloud/networking/2014/04/15/Rackspace-private-cloud-networking.html</guid>
 			</item>
 		
+			<item>
+				<title>My Rackspace chef environment</title>
+				<description>&lt;p&gt;This is a note of how I change Rackspace Private Cloud (RPC) chef&amp;#39;s environment before bootstrap own nodes.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;MDI-private-cloud&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;description&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Mobile Device - Rackspace Private Cloud v4.2.2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;cookbook_versions&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;json_class&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Chef::Environment&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;chef_type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;environment&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;default_attributes&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+   &lt;span class=&quot;nt&quot;&gt;&amp;quot;override_attributes&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;nt&quot;&gt;&amp;quot;custom_template_banner&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Mobile Devices Ingenierie Cloud&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+     &lt;span class=&quot;nt&quot;&gt;&amp;quot;developer_mode&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+     &lt;span class=&quot;nt&quot;&gt;&amp;quot;enable_testing_repos&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;nova&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;network&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;quot;provider&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;neutron&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;neutron&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;ovs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;quot;provider_networks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+                  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                     &lt;span class=&quot;nt&quot;&gt;&amp;quot;label&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;ph-eth0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                     &lt;span class=&quot;nt&quot;&gt;&amp;quot;bridge&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;br-eth0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                     &lt;span class=&quot;nt&quot;&gt;&amp;quot;vlans&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1:1&amp;quot;&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+             &lt;span class=&quot;nt&quot;&gt;&amp;quot;network_type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;gre&amp;quot;&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;mysql&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;allow_remote_root&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;root_network_acl&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;%&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;osops_networks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;nova&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.0/24&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;public&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.0/24&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+         &lt;span class=&quot;nt&quot;&gt;&amp;quot;management&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;192.168.1.0/24&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+				<pubDate>Tue, 15 Apr 2014 15:52:47 +0200</pubDate>
+				<link>/openstack/chef/rackspace/2014/04/15/Rackspace-chef-environment.html</link>
+				<guid isPermaLink="true">/openstack/chef/rackspace/2014/04/15/Rackspace-chef-environment.html</guid>
+			</item>
+		
+			<item>
+				<title>OpenStack networking designs notes</title>
+				<description>&lt;h1&gt;OpenStack networking designs&lt;/h1&gt;
+
+&lt;p&gt;Based on this &lt;a href=&quot;http://www.slideshare.net/lowescott/an-introduction-to-openstack-networking&quot;&gt;slice&lt;/a&gt; of Scott Lowe and my testing results.&lt;/p&gt;
+
+&lt;h2&gt;What should we know about OpenStack networking&lt;/h2&gt;
+
+&lt;p&gt;There are two types of network in OpenStack Neutron:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Provider network&lt;/strong&gt;: or physical network inside/between DCs. Possible designs:
+
+&lt;ul&gt;
+&lt;li&gt;Flat (untagged): all hosts in the same network domain.&lt;/li&gt;
+&lt;li&gt;VLAN (tagged): separate physical broadcast domain by using tagged switch.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tenant network&lt;/strong&gt;: logical network between VMs. Both methods below support separated network.
+
+&lt;ul&gt;
+&lt;li&gt;GRE (unique id)&lt;/li&gt;
+&lt;li&gt;VLAN (tagged)
+At least one Provider network must be configured.&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://developer.rackspace.com/blog/neutron-networking-the-building-blocks-of-an-openstack-cloud.html&quot;&gt;Network concepts&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Deployment models&lt;/h2&gt;
+
+&lt;h3&gt;Flat network&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The most simple deployment.&lt;/li&gt;
+&lt;li&gt;Use only one provider network. &lt;/li&gt;
+&lt;li&gt;Don&amp;#39;t use any tenant network at all. All tenants share an IP pool.&lt;/li&gt;
+&lt;li&gt;VMs get IPs directly from provider network.&lt;/li&gt;
+&lt;li&gt;No need any neutron function.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Simple, can use for testing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Bad:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;One broadcast domain. &lt;/li&gt;
+&lt;li&gt;Sniffing packets of other tenants.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Multiple flat network&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use VLAN (need physical switch support) to separate Provider networks.&lt;/li&gt;
+&lt;li&gt;Multiple providers networks&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Note:&lt;/strong&gt; one VM can lay on two VLAN by configuring two IPs for it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Network separation between tenant. Congrat!&lt;/li&gt;
+&lt;li&gt;Multiple broadcast domains&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Bad:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Need hardware configuration (Switch)&lt;/li&gt;
+&lt;li&gt;Scaling needs configuring HW (create new VLAN)&lt;/li&gt;
+&lt;li&gt;Creating new tenant networks needs configuring HW (omg T.T)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Mixed flat and private network&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Based on one flat network model: one provider network.&lt;/li&gt;
+&lt;li&gt;Don&amp;#39;t use Neutron router. &lt;/li&gt;
+&lt;li&gt;Each VM has private IP.&lt;/li&gt;
+&lt;li&gt;Traffic is encapsulate for tenant network communication. Ensure the security, but the broadcast domain is not separated.&lt;/li&gt;
+&lt;li&gt;They may use some Linux Bridge/IPSec technologies, I&amp;#39;m not sure.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;One Neutron router in front of private (tenant) networks&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Based on Mixed flat and private network, no use physical switch (physical VLAN)&lt;/li&gt;
+&lt;li&gt;Put a Neutron router (virtual router) in front of private networks.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Separate traffic between tenants&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Bad:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Each tenant has one private network. &lt;/li&gt;
+&lt;li&gt;Tenant may create two private networks, but there traffic is not separated.&lt;/li&gt;
+&lt;li&gt;Now we separate the term tenant and private network: one tenant in OpenStack equivalent with a project. One project may need more than one users working on. So each tenant may need several private networks.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Each tenant has one Neutron router&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The headline already describes it&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Separate traffic between tenants&lt;/li&gt;
+&lt;li&gt;Separate traffic between private network inside tenants&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Ugly:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Don&amp;#39;t know yet, I&amp;#39;m on the way of testing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;That&amp;#39;s the theorical design, now get back to the ugly earth&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If hosts lay on multiple data centers (DCs), is the last model has any problems?&lt;/li&gt;
+&lt;li&gt;All models above can use one or two or three NICs. Idealy, they want to separate management network with the network we are discussing. But what if we have only one NIC?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Based on &lt;a href=&quot;http://docs.openstack.org/trunk/openstack-ops/content/network_design.html&quot;&gt;this&lt;/a&gt;, A management network (a separate network for use by your cloud operators), typically consisting of a separate switch and separate NICs (network interface cards), is a recommended option. This segregation prevents system administration and the monitoring of system access from being disrupted by traffic generated by guests. What we were talking above is Data Network between guests.&lt;/p&gt;
+</description>
+				<pubDate>Tue, 15 Apr 2014 15:52:47 +0200</pubDate>
+				<link>/openstack/networking/2014/04/15/OpenStack-networking-notes.html</link>
+				<guid isPermaLink="true">/openstack/networking/2014/04/15/OpenStack-networking-notes.html</guid>
+			</item>
+		
 	</channel>
 </rss>
