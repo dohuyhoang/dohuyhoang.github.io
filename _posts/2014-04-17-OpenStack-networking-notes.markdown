@@ -2,6 +2,7 @@
 layout: post
 title:  "OpenStack networking designs notes"
 date:   2014-04-15 13:52:47
+comments: true
 categories: OpenStack Networking
 ---
 
