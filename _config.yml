@@ -22,6 +22,19 @@ rss_path: feed.xml
 categories_path: categories.html
 tags_path: tags.html
 
+comments :
+  provider : disqus
+  disqus :
+  short_name : dohuyhoang
+  #livefyre :
+  #  site_id : 123
+  #intensedebate :
+  #  account : 123abc
+  #facebook :
+  #  appid : 123
+  #  num_posts: 5
+  #  width: 580
+  #  colorscheme: light
 #BASE_PATH: http://dohuyhoang.github.io
 
 # All links will be namespaced by BASE_PATH if defined.

@@ -301,7 +301,19 @@ At least one Provider network must be configured.<br></li>
 <li>Don&#39;t know yet, I&#39;m on the way of testing</li>
 </ul>
 
-<h3>That&#39;s the theorical design, now get back to the ugly earth</h3>
+<h2>Nova-network vs Neutron network</h2>
+
+<p>Among all networking models above, nova-network only support the two first: flat and multiple-flat (VLAN). Obviously, it can&#39;t support any models with <code>neutron</code> name inside. If we choose to use nova-network, be ready to face scaling problem later. In addition, it won&#39;t support plugin-in mechadism to use third parties solutions. I don&#39;t recommend to use it unless you want to do a school project and want to save time to play video game. </p>
+
+<p>With Neutron, you have full network virtualization solution. The network is decoupled with hardware. Neutron uses an open-source product that&#39;s called Open vSwitch. When configuring Neutron, you will usually see the term OVS.   </p>
+
+<p><img src="/assets/media/neutron1.jpg" alt="OVS" title="http://www.slideshare.net/yfauser/open-stack-networking101part1"></p>
+
+<p>Note that Neutron uses plugin mechanism. That means neutron itself only define the services - L2 network abstraction - then the plugins will provides the implementation. Third parties plugins may provides some extend functions as well.</p>
+
+<p>Some well-known plugins (I-known) are <code>OVS</code>, <code>Linux Bridge</code>, <code>NEC</code>, <code>Midokura</code>, <code>Contrail</code>.</p>
+
+<h2>That&#39;s the theorical design, now get back to the ugly earth</h2>
 
 <ul>
 <li>If hosts lay on multiple data centers (DCs), is the last model has any problems?</li>
@@ -347,10 +359,21 @@ At least one Provider network must be configured.<br></li>
 
 		<hr>
 	</div>
-	
 	<div class="col-sm-2 sidebar-2">
 	
 	</div>
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+		<var disqus_shortname = 'dohuyhoang'; 
+		(function() {
+			 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			 dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		 	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+		 })();
+	</script>	
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
 </article>
 <div class="clearfix"></div>
 

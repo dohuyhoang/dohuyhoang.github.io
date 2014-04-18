@@ -106,7 +106,19 @@ At least one Provider network must be configured.
 
 * Don't know yet, I'm on the way of testing
 
-### That's the theorical design, now get back to the ugly earth
+## Nova-network vs Neutron network
+
+Among all networking models above, nova-network only support the two first: flat and multiple-flat (VLAN). Obviously, it can't support any models with `neutron` name inside. If we choose to use nova-network, be ready to face scaling problem later. In addition, it won't support plugin-in mechadism to use third parties solutions. I don't recommend to use it unless you want to do a school project and want to save time to play video game. 
+
+With Neutron, you have full network virtualization solution. The network is decoupled with hardware. Neutron uses an open-source product that's called Open vSwitch. When configuring Neutron, you will usually see the term OVS.   
+
+![OVS](/assets/media/neutron1.jpg "http://www.slideshare.net/yfauser/open-stack-networking101part1")
+
+Note that Neutron uses plugin mechanism. That means neutron itself only define the services - L2 network abstraction - then the plugins will provides the implementation. Third parties plugins may provides some extend functions as well.
+
+Some well-known plugins (I-known) are `OVS`, `Linux Bridge`, `NEC`, `Midokura`, `Contrail`.
+
+## That's the theorical design, now get back to the ugly earth
 
 * If hosts lay on multiple data centers (DCs), is the last model has any problems?
 * All models above can use one or two or three NICs. Idealy, they want to separate management network with the network we are discussing. But what if we have only one NIC?
