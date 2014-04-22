@@ -10,7 +10,7 @@ I'm not an expert in DevOps myself. This blog is merely a digest note from my re
 
 DevOps stands for Development and Operations. First of all, it's an "another" software development methodology. Of course, as other siblings, this methodology is created to solve some problem in software world. 
 
-![Wiki](http://upload.wikimedia.org/wikipedia/commons/b/b5/Devops.svg http://en.wikipedia.org/wiki/DevOps)
+![Wiki](http://upload.wikimedia.org/wikipedia/commons/b/b5/Devops.svg)
 
 ## The problem
 
