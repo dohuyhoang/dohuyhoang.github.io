@@ -15,13 +15,14 @@ One well-known example of IaaS provider is Amazon Web Service (AWS). They provid
 
 ![CloudStackDetail](/assets/media/CloudStackDetail.png 'Detail of three services')
 
-AWS is considered public cloud. Amazon controls the hardware, and all users share that resource pool. All users' data is stored on Amazon's hardware property. That create the fear of vendor lock-in - a day when the IaaS refuse to serve and claim all data on their servers. That gives birth for the **Private Cloud** trend - the cloud that runs on enterprise's own hardware. On the market, there are plenty of Open Source and commercial product that help building private cloud. Among them, there are some product stand out: 
+AWS is considered public cloud. Amazon controls the hardware, and all users share that resource pool. All users' data is stored on Amazon's hardware property. That create the fear of vendor lock-in - a day when the IaaS refuse to serve and claim all data on their servers. That gives birth for the **Private Cloud** trend - the cloud that runs on enterprise's own hardware. On the market, there are plenty of Open Source and commercial product that help building private cloud:
 
 * OpenStack
 * CloudStack
 * Eucalyptus
 
-They are all open source. OpenStack is having the momentum.   
+They are all open source. Among them, OpenStack is having the momentum. They have largest community, as well as supported by many companies: HP, IBM, Rackspace, NASA, Mirantis, etc.    
+
 
 
 <http://en.wikipedia.org/wiki/Cloud-computing>

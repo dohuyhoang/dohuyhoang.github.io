@@ -1,0 +1,22 @@
+
+Report internship
+
+Introduction
+
+By deploying those technologies on enterprise environment, I can understand the needs of the industry.  
+By comparing those technologies, we gain deep insight of each 
+
+
+Objectives
+
+* Learn the business and technical requirements of Mobile-Devices.
+* Survey all Cloud/Virtualization technologies on the markets: VMware, OpenStack, CloudStack, Eucalyptus.
+* Finding the most suitable technologies. Some criteria: big data support, HA, simplicty to manage, scalable, networking support.
+* Deploy small cloud environments based on that technologies, deploy MDI platform on the clouds.
+* Perform testing and evaluating clouds. Choose the most suitable one.
+* [Optional] implement some features to adapt the chosen cloud.
+* Mass deploy chosen technology on all Mobile-Devices servers.
+* Migrate all platform on the new cloud
+* Documentation
+
+
