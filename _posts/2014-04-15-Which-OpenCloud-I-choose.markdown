@@ -1,9 +1,19 @@
 ---
 layout: post
-title:  "Which OpenCloud I choose? OpenStack or CloudStack"
+title:  "Which OpenCloud I choose? OpenStack, CloudStack or VMware"
 date:   2014-04-15 15:52:47
 categories: OpenCloud OpenStack CloudStack VMware
 ---
+
+In recent years, we can observer a rapid advance of cloud IaaS technology. In the past, only VMware made its name and widely used in DC management. Then the rise of AWS make a huge impact on the industry. To fight again the Godzilla EC2, and with the needs of private cloud, latecomers enterprises and communities join force to create different OpenSource IaaS platform:
+
+* Eucalyptus: a second broadest community and an official partner with AWS.
+* CloudStack: a most completed product, used to be an closed software belong to Citrix. They decide to contribute source code to Apache to join the race. Small but well-tested. 
+* OpenNebula: with smallest community. 
+* OpenStack: with broadest community, back by giants, and illimited pocket of money. 
+
+All of them joined a fierce stack war. I can't say which of them will win, but we will focus on the leading group: CloudStack - a number one in term of industry deploying, OpenStack - a number one in term of community and supports, and VMware - an ancient giant. 
+
 # OpenCloud vs VMware
 
 The most traditional technology for DC virtualization is VMware vCenter. Why I called it *traditional*. Because this tool has been developed for a long time, and was adopted by many legacy systems. However, we hardly called it Cloud technology. I have a honor to consult Mr. Thierry Carrez - OpenStack release manager. He gave me an answer that I found the most correct:

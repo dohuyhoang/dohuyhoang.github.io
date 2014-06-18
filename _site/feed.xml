@@ -7,8 +7,116 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>Which OpenCloud I choose? OpenStack or CloudStack</title>
-				<description>&lt;h1&gt;OpenCloud vs VMware&lt;/h1&gt;
+				<title>Introduction to OpenCloud</title>
+				<description>&lt;p&gt;The &lt;strong&gt;Cloud&lt;/strong&gt; is one of the most popular term on Internet nowadays. Cloud computing is widely adopted by all scaled enterprises. By wikipedia definition, cloud computing is computing that involves a large number of computers connected through a communication network such as the Internet, similar to utility computing. In science, cloud computing is a synonym for distributed computing over a network, and means the ability to run a program or application on many connected computers at the same time.  &lt;/p&gt;
+
+&lt;p&gt;Infrastructure as a Service (IaaS) is one of the three fundamental services of cloud computing. It aims for providing a hardware infrastructure, including the virtual servers, network connections, IP address, storage hardwares, etc. or a pool of resources. This resource pool can be scale easily later. &lt;/p&gt;
+
+&lt;p&gt;One well-known example of IaaS provider is Amazon Web Service (AWS). They provide users scalable clusters with unlimited VMs. Users don&amp;#39;t care about networking or hardwares below. Users can add more storage space, CPU, RAM for their VMs anytime. &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/CloudStack.gif&quot; alt=&quot;CloudStack&quot; title=&quot;Stack of three fundamental services&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/CloudStackDetail.png&quot; alt=&quot;CloudStackDetail&quot; title=&quot;Detail of three services&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;AWS is considered public cloud. Amazon controls the hardware, and all users share that resource pool. All users&amp;#39; data is stored on Amazon&amp;#39;s hardware property. That create the fear of vendor lock-in - a day when the IaaS refuse to serve and claim all data on their servers. That gives birth for the &lt;strong&gt;Private Cloud&lt;/strong&gt; trend - the cloud that runs on enterprise&amp;#39;s own hardware. On the market, there are plenty of Open Source and commercial product that help building private cloud:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;OpenStack&lt;/li&gt;
+&lt;li&gt;CloudStack&lt;/li&gt;
+&lt;li&gt;Eucalyptus&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;They are all open source. Among them, OpenStack is having the momentum. They have largest community, as well as supported by many companies: HP, IBM, Rackspace, NASA, Mirantis, etc.    &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Cloud-computing&quot;&gt;http://en.wikipedia.org/wiki/Cloud-computing&lt;/a&gt;&lt;/p&gt;
+</description>
+				<pubDate>Tue, 22 Apr 2014 18:00:00 +0200</pubDate>
+				<link>/opencloud/cloud/openstack/cloudstack/iaas/2014/04/22/OpenCloud.html</link>
+				<guid isPermaLink="true">/opencloud/cloud/openstack/cloudstack/iaas/2014/04/22/OpenCloud.html</guid>
+			</item>
+		
+			<item>
+				<title>Inversion of Control</title>
+				<description></description>
+				<pubDate>Tue, 22 Apr 2014 18:00:00 +0200</pubDate>
+				<link>/software/design/java/2014/04/22/IoC.html</link>
+				<guid isPermaLink="true">/software/design/java/2014/04/22/IoC.html</guid>
+			</item>
+		
+			<item>
+				<title>What is DevOps.</title>
+				<description>&lt;p&gt;I&amp;#39;m not an expert in DevOps myself. This blog is merely a digest note from my reading and very little experience. I&amp;#39;m intending to update it when I gain more experience or from your help. &lt;/p&gt;
+
+&lt;h1&gt;What is DevOps&lt;/h1&gt;
+
+&lt;p&gt;DevOps stands for Development and Operations. First of all, it&amp;#39;s an &amp;quot;another&amp;quot; software development methodology. Of course, as other siblings, this methodology is created to solve some problem in software world. &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://upload.wikimedia.org/wikipedia/commons/b/b5/Devops.svg&quot; alt=&quot;Wiki&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;The problem&lt;/h2&gt;
+
+&lt;p&gt;Simply speaking, development guys and operations guys are enemy of each other. Development means to change and evolve. While operations need stability. Some statistic numbers: 80% downtime is due to changes. 47% of total time dedicated to deployment.&lt;/p&gt;
+
+&lt;p&gt;But of course we need development. The problem is the misunderstanding between Dev and Ops, that we call &lt;strong&gt;The wall of Confusion&lt;/strong&gt;. To add fuel into the fire, many global companies have Dev team in Vietnam and Ops team in Europe. Geometry distance will enlarge the wall. &lt;/p&gt;
+
+&lt;p&gt;The worst day is &lt;strong&gt;release/deployment&lt;/strong&gt; day, when changes are pushed from Dev team to Ops team. The most typical problem is the differences in environment between Dev and Ops. The Ops team has to hack the product, modify all configuration files. And when they give up, changes will be rolled back in Ops, bugs are reported to Devs, and Dev guys will say f**k  &lt;/p&gt;
+
+&lt;h2&gt;The solution&lt;/h2&gt;
+
+&lt;p&gt;DevOps focuses on communication. Cooperation between Dev and Ops must start before and continues long after release/deployment. &lt;/p&gt;
+
+&lt;p&gt;We should also considering the voices again DevOps. I read &lt;a href=&quot;http://jeffknupp.com/blog/2014/04/15/how-devops-is-killing-the-developer/&quot;&gt;an article&lt;/a&gt; of Jeff Knupp, and I think his point of view is interesting (not that I agree). He complained force a developer to handle tasks of QA, sysadmin, analyst. That&amp;#39;s the birth of &amp;quot;full-stack&amp;quot; developer, and some traditional dev who only love programming will feel annoyed (not in my case definitely). &lt;/p&gt;
+
+&lt;p&gt;Not so convinced?&lt;/p&gt;
+
+&lt;h2&gt;Which companies used DevOps&lt;/h2&gt;
+
+&lt;p&gt;All of software companies can use it, of course. 
+But the one who need it the most is the companies with very frequent releases. For example, Flickr with 10 deployments per day. Facebook with 1 deployment each day. Amazon with a deployment per 11 seconds.   &lt;/p&gt;
+
+&lt;h2&gt;Ok I&amp;#39;ll use DevOps, but how to use?&lt;/h2&gt;
+
+&lt;p&gt;As mentioned above, DevOps is a methodology. That means you need tools, training, changes in approach, changes in culture, etc. to adopt it. The following is just some tips based on my experience to help. &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Chef&lt;/strong&gt;: with chef, you write the code to configure the infrastructure (infrastructure as a code). The good point is you don&amp;#39;t have to worry about the different in env between Dev and Ops. You can check this &lt;a href=&quot;http://www.slideshare.net/JulianDunn/chef-introduction-princeton-meetup&quot;&gt;slide&lt;/a&gt; for more info.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Docker&lt;/strong&gt;: provide a unique sandbox environment for apps. It&amp;#39;s quite popular now, and is a competitor of Chef.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;The culture&lt;/strong&gt;: train dev with QA, sysadmin roles. Train sysadmin how to program. Build a team with both of them.  &lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Deploying&lt;/strong&gt;: deploy frequently. A deploy with smaller code changes is better than an upgrade with hundred files changes. &lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This &lt;a href=&quot;http://www.slideshare.net/OCTOTechnology/introduction-to-devops-28779951&quot;&gt;slides&lt;/a&gt; provides plenty good examples. &lt;/p&gt;
+
+&lt;p&gt;Now it&amp;#39;s your turn to help. Please sharing your own experience using DevOps. &lt;/p&gt;
+</description>
+				<pubDate>Tue, 22 Apr 2014 16:00:00 +0200</pubDate>
+				<link>/devops/2014/04/22/What-is-DevOpswq.html</link>
+				<guid isPermaLink="true">/devops/2014/04/22/What-is-DevOpswq.html</guid>
+			</item>
+		
+			<item>
+				<title>What is Cloud. Why do we need it.</title>
+				<description>&lt;p&gt;Today, one of my collegue ask me a very interesting question: &amp;quot;What is Cloud?&amp;quot; I was stunned a very long minute. It&amp;#39;s true that I don&amp;#39;t know the answer. Then I ask him back &amp;quot;What do you think Cloud is?&amp;quot;. That&amp;#39;s a start of a very interesting conversation. &lt;/p&gt;
+</description>
+				<pubDate>Fri, 18 Apr 2014 12:00:00 +0200</pubDate>
+				<link>/opencloud/openstack/cloudstack/vmware/2014/04/18/What-is-Cloud-Why-we-need-it.html</link>
+				<guid isPermaLink="true">/opencloud/openstack/cloudstack/vmware/2014/04/18/What-is-Cloud-Why-we-need-it.html</guid>
+			</item>
+		
+			<item>
+				<title>Which OpenCloud I choose? OpenStack, CloudStack or VMware</title>
+				<description>&lt;p&gt;In recent years, we can observer a rapid advance of cloud IaaS technology. In the past, only VMware made its name and widely used in DC management. Then the rise of AWS make a huge impact on the industry. To fight again the Godzilla EC2, and with the needs of private cloud, latecomers enterprises and communities join force to create different OpenSource IaaS platform:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Eucalyptus: a second broadest community and an official partner with AWS.&lt;/li&gt;
+&lt;li&gt;CloudStack: a most completed product, used to be an closed software belong to Citrix. They decide to contribute source code to Apache to join the race. Small but well-tested. &lt;/li&gt;
+&lt;li&gt;OpenNebula: with smallest community. &lt;/li&gt;
+&lt;li&gt;OpenStack: with broadest community, back by giants, and illimited pocket of money. &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;All of them joined a fierce stack war. I can&amp;#39;t say which of them will win, but we will focus on the leading group: CloudStack - a number one in term of industry deploying, OpenStack - a number one in term of community and supports, and VMware - an ancient giant. &lt;/p&gt;
+
+&lt;h1&gt;OpenCloud vs VMware&lt;/h1&gt;
 
 &lt;p&gt;The most traditional technology for DC virtualization is VMware vCenter. Why I called it &lt;em&gt;traditional&lt;/em&gt;. Because this tool has been developed for a long time, and was adopted by many legacy systems. However, we hardly called it Cloud technology. I have a honor to consult Mr. Thierry Carrez - OpenStack release manager. He gave me an answer that I found the most correct:&lt;/p&gt;
 

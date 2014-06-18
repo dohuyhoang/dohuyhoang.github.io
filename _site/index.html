@@ -1,95 +1,93 @@
 <!DOCTYPE html>
 <html lang="tr">
+<head>
+	<meta charset="utf-8">
+	<title>A Cloudy Blog</title>
+	
+	<meta name="author" content="Hoang Do">
 
-<! -- header.html -->
-<meta charset="utf-8">
-<title>A Cloudy Blog</title>
+	<!-- Enable responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="author" content="Hoang Do">
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 
-<!-- Enable responsive viewport -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Le styles -->
+	<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
 
-<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-<!--[if lt IE 9]>
- <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
+	<!-- Le fav and touch icons -->
+	<!-- Update these with your own images
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	-->
 
-<!-- Le styles -->
-<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
-<link href="/assets/css/style.css" rel="stylesheet">
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+</head>
 
-<!-- Le fav and touch icons -->
-<!-- Update these with your own images -->
-<link rel="shortcut icon" href="images/favicon.ico">
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-
- <link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
-
-<! -- header.html end -->
-
-
-   <body>
-   		<nav class="navbar navbar-default visible-xs" role="navigation">
-		  <!-- Brand and toggle get grouped for better mobile display -->
-		  <div class="navbar-header">
-		    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-			  <span class="sr-only">Toggle navigation</span>
-			  <span class="icon-bar"></span>
-			  <span class="icon-bar"></span>
-			  <span class="icon-bar"></span>
+<body>
+	<nav class="navbar navbar-default visible-xs" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
 			</button>
 			
 			<a type="button" class="navbar-toggle nav-link" href="http://github.com/dohuyhoang">
-		      <i class="fa fa-github"></i>
-		    </a>
-		    
-		    
-		    <a type="button" class="navbar-toggle nav-link" href="http://twitter.com/dohuyhoang88">
-		      <i class="fa fa-twitter"></i>
-		    </a>
-		    
-		    
-		    <a type="button" class="navbar-toggle nav-link" href="mailto:dohuyhoang88@gmail.com">
-		      <i class="fa fa-envelope"></i>
-		    </a>
-		    
+				<i class="fa fa-github"></i>
+			</a>
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://twitter.com/dohuyhoang88">
+				<i class="fa fa-twitter"></i>
+			</a>
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="mailto:dohuyhoang88@gmail.com">
+				<i class="fa fa-envelope"></i>
+			</a>
+			
 			<a class="navbar-brand" href="/">
 				<img src="http://www.gravatar.com/avatar/?s=35" class="img-circle" />
 				A Cloudy Blog
 			</a>
-		  </div>
+		</div>
 
-		  <!-- Collect the nav links, forms, and other content for toggling -->
-		  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-			  <li class="active"><a href="/">Home</a></li>
-			  <li><a href="/categories.html">Categories</a></li>
-  			  <li><a href="/tags.html">Tags</a></li>
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/categories.html">Categories</a></li>
+				<li><a href="/tags.html">Tags</a></li>
 			</ul>
-		  </div><!-- /.navbar-collapse -->
-		</nav>
+		</div><!-- /.navbar-collapse -->
+	</nav>
 
-       <!-- nav-menu-dropdown -->
-       <div class="btn-group hidden-xs" id="nav-menu">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-bars"></i>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
-            <li><a href="/categories.html"><i class="fa fa-folder"></i> Categories</a></li>
-            <li><a href="/tags.html"><i class="fa fa-tags"></i> Tags</a></li>
-              <li class="divider"></li>
-            <li><a href="#"><i class="fa fa-arrow-up"></i> Top of Page</a></li>
-          </ul>
-       </div>
+	<!-- nav-menu-dropdown -->
+	<div class="btn-group hidden-xs" id="nav-menu">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-bars"></i>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="/categories.html"><i class="fa fa-folder"></i> Categories</a></li>
+			<li><a href="/tags.html"><i class="fa fa-tags"></i> Tags</a></li>
+			<li class="divider"></li>
+			<li><a href="#"><i class="fa fa-arrow-up"></i> Top of Page</a></li>
+		</ul>
+	</div>
 
-		<div class="col-sm-3 sidebar hidden-xs">
-			<! -- sidebar.html -->
+	<div class="col-sm-3 sidebar hidden-xs">
+		<! -- sidebar.html -->
 <header class="sidebar-header" role="banner">
 	<a href="/">
 		<img src="http://www.gravatar.com/avatar/?s=150" class="img-circle" />
@@ -150,13 +148,116 @@
 
 <! -- sidebar.html end -->
 
-		</div>
+	</div>
 
-		<div class="col-sm-9 col-sm-offset-3">
-			<div class="page-header">
+	<div class="col-sm-9 col-sm-offset-3">
+		<div class="page-header">
   <h1>A Cloudy Blog </h1>
 </div>
 
+
+
+        <article class="home">
+
+            <span class="post-date">
+                
+                April
+                22nd,
+                  
+                2014
+            </span>
+
+            <h2>
+                <a href="/opencloud/cloud/openstack/cloudstack/iaas/2014/04/22/OpenCloud.html">Introduction to OpenCloud</a>
+            </h2>
+
+             <div>
+                 
+                    
+                        <p>The <strong>Cloud</strong> is one of the most popular term on Internet nowadays. Cloud computing is widely adopted by all scaled enterprises. By wikipedia definition, cloud computing is computing that involves a large number of computers connected through a communication network such as the Internet, similar to utility computing. In science, cloud computing is a synonym for distributed computing over a network, and means the ability to run a program or application on many connected computers at the same time.  </p>
+
+                    
+		  
+	 </div>
+
+        </article>
+
+
+        <article class="home">
+
+            <span class="post-date">
+                
+                April
+                22nd,
+                  
+                2014
+            </span>
+
+            <h2>
+                <a href="/software/design/java/2014/04/22/IoC.html">Inversion of Control</a>
+            </h2>
+
+             <div>
+                 
+                    
+                        
+                    
+		  
+	 </div>
+
+        </article>
+
+
+        <article class="home">
+
+            <span class="post-date">
+                
+                April
+                22nd,
+                  
+                2014
+            </span>
+
+            <h2>
+                <a href="/devops/2014/04/22/What-is-DevOpswq.html">What is DevOps.</a>
+            </h2>
+
+             <div>
+                 
+                    
+                        <p>I&#39;m not an expert in DevOps myself. This blog is merely a digest note from my reading and very little experience. I&#39;m intending to update it when I gain more experience or from your help. </p>
+
+                    
+		  
+	 </div>
+
+        </article>
+
+
+        <article class="home">
+
+            <span class="post-date">
+                
+                April
+                18th,
+                
+                2014
+            </span>
+
+            <h2>
+                <a href="/opencloud/openstack/cloudstack/vmware/2014/04/18/What-is-Cloud-Why-we-need-it.html">What is Cloud. Why do we need it.</a>
+            </h2>
+
+             <div>
+                 
+                    
+                        <p>Today, one of my collegue ask me a very interesting question: &quot;What is Cloud?&quot; I was stunned a very long minute. It&#39;s true that I don&#39;t know the answer. Then I ask him back &quot;What do you think Cloud is?&quot;. That&#39;s a start of a very interesting conversation. </p>
+
+                    
+		  
+	 </div>
+
+        </article>
 
 
         <article class="home">
@@ -170,17 +271,17 @@
             </span>
 
             <h2>
-                <a href="/opencloud/openstack/cloudstack/vmware/2014/04/15/Which-OpenCloud-I-choose.html">Which OpenCloud I choose? OpenStack or CloudStack</a>
+                <a href="/opencloud/openstack/cloudstack/vmware/2014/04/15/Which-OpenCloud-I-choose.html">Which OpenCloud I choose? OpenStack, CloudStack or VMware</a>
             </h2>
 
-             <!-- <div>
+             <div>
                  
                     
-                        <h1>OpenCloud vs VMware</h1>
+                        <p>In recent years, we can observer a rapid advance of cloud IaaS technology. In the past, only VMware made its name and widely used in DC management. Then the rise of AWS make a huge impact on the industry. To fight again the Godzilla EC2, and with the needs of private cloud, latecomers enterprises and communities join force to create different OpenSource IaaS platform:</p>
 
                     
 		  
-	 </div> -->
+	 </div>
 
         </article>
 
@@ -199,14 +300,14 @@
                 <a href="/openstack/rackspace/opencloud/networking/2014/04/15/Rackspace-private-cloud-networking.html">Introduce Rackspace Private Cloud Networking</a>
             </h2>
 
-             <!-- <div>
+             <div>
                  
                     
                         <h1>Rackspace Private Cloud networking</h1>
 
                     
 		  
-	 </div> -->
+	 </div>
 
         </article>
 
@@ -225,14 +326,14 @@
                 <a href="/openstack/chef/rackspace/2014/04/15/Rackspace-chef-environment.html">My Rackspace chef environment</a>
             </h2>
 
-             <!-- <div>
+             <div>
                  
                     
                         <p>This is a note of how I change Rackspace Private Cloud (RPC) chef&#39;s environment before bootstrap own nodes.</p>
 
                     
 		  
-	 </div> -->
+	 </div>
 
         </article>
 
@@ -251,14 +352,14 @@
                 <a href="/openstack/networking/2014/04/15/OpenStack-networking-notes.html">OpenStack networking designs notes</a>
             </h2>
 
-             <!-- <div>
+             <div>
                  
                     
                         <h1>OpenStack networking designs</h1>
 
                     
 		  
-	 </div> -->
+	 </div>
 
         </article>
 
@@ -287,25 +388,16 @@
 
 
 
-			<!-- footer.html -->
-<footer>
- <hr/>
- <p>
- 	&copy; 2014 Hoang Do. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
- </p>
-</footer>
+		<footer>
+			<hr/>
+			<p>
+				&copy; 2014 Hoang Do with Jekyll. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
+			</p>
+		</footer>
+	</div>
 
-<!-- footer.html end -->
-
-
-		</div>
-
-    
 	<script type="text/javascript" src="/assets/resources/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="/assets/resources/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/assets/js/app.js"></script>
-   </body>
-
+</body>
 </html>
-
-

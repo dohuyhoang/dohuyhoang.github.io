@@ -1,0 +1,9 @@
+---
+layout: post
+title:  "Inversion of Control"
+date:   2014-04-22 16:00:00
+categories: Software Design Java
+---
+
+
+

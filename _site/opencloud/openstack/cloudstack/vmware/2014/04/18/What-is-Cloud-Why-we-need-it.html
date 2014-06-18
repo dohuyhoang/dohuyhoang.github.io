@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 	<meta charset="utf-8">
-	<title>OpenStack networking designs notes</title>
+	<title>What is Cloud. Why do we need it.</title>
 	
 	<meta name="author" content="Hoang Do">
 
@@ -152,7 +152,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>OpenStack networking designs notes </h1>
+  <h1>What is Cloud. Why do we need it. </h1>
 </div>
 	
 <article>
@@ -161,165 +161,12 @@
 	 <span class="post-date">
 	   
 	   April 
-	   15th,
+	   18th,
 	   
 	   2014
 	 </span>
 	  <div class="article_body">
-	  <h1>OpenStack networking designs</h1>
-
-<p>Based on this <a href="http://www.slideshare.net/lowescott/an-introduction-to-openstack-networking">slice</a> of Scott Lowe and my testing results.</p>
-
-<h2>What should we know about OpenStack networking</h2>
-
-<p>There are two types of network in OpenStack Neutron:</p>
-
-<ul>
-<li><strong>Provider network</strong>: or physical network inside/between DCs. Possible designs:
-
-<ul>
-<li>Flat (untagged): all hosts in the same network domain.</li>
-<li>VLAN (tagged): separate physical broadcast domain by using tagged switch.</li>
-</ul></li>
-<li><strong>Tenant network</strong>: logical network between VMs. Both methods below support separated network.
-
-<ul>
-<li>GRE (unique id)</li>
-<li>VLAN (tagged)
-At least one Provider network must be configured.<br></li>
-</ul></li>
-</ul>
-
-<p><a href="http://developer.rackspace.com/blog/neutron-networking-the-building-blocks-of-an-openstack-cloud.html">Network concepts</a></p>
-
-<h2>Deployment models</h2>
-
-<h3>Flat network</h3>
-
-<p><strong>How:</strong></p>
-
-<ul>
-<li>The most simple deployment.</li>
-<li>Use only one provider network. </li>
-<li>Don&#39;t use any tenant network at all. All tenants share an IP pool.</li>
-<li>VMs get IPs directly from provider network.</li>
-<li>No need any neutron function.</li>
-</ul>
-
-<p><strong>Good:</strong></p>
-
-<ul>
-<li>Simple, can use for testing</li>
-</ul>
-
-<p><strong>Bad:</strong></p>
-
-<ul>
-<li>One broadcast domain. </li>
-<li>Sniffing packets of other tenants.</li>
-</ul>
-
-<h3>Multiple flat network</h3>
-
-<p><strong>How:</strong></p>
-
-<ul>
-<li>Use VLAN (need physical switch support) to separate Provider networks.</li>
-<li>Multiple providers networks</li>
-<li><strong>Note:</strong> one VM can lay on two VLAN by configuring two IPs for it.</li>
-</ul>
-
-<p><strong>Good:</strong></p>
-
-<ul>
-<li>Network separation between tenant. Congrat!</li>
-<li>Multiple broadcast domains</li>
-</ul>
-
-<p><strong>Bad:</strong></p>
-
-<ul>
-<li>Need hardware configuration (Switch)</li>
-<li>Scaling needs configuring HW (create new VLAN)</li>
-<li>Creating new tenant networks needs configuring HW (omg T.T)</li>
-</ul>
-
-<h3>Mixed flat and private network</h3>
-
-<p><strong>How:</strong></p>
-
-<ul>
-<li>Based on one flat network model: one provider network.</li>
-<li>Don&#39;t use Neutron router. </li>
-<li>Each VM has private IP.</li>
-<li>Traffic is encapsulate for tenant network communication. Ensure the security, but the broadcast domain is not separated.</li>
-<li>They may use some Linux Bridge/IPSec technologies, I&#39;m not sure.</li>
-</ul>
-
-<h3>One Neutron router in front of private (tenant) networks</h3>
-
-<p><strong>How:</strong></p>
-
-<ul>
-<li>Based on Mixed flat and private network, no use physical switch (physical VLAN)</li>
-<li>Put a Neutron router (virtual router) in front of private networks.</li>
-</ul>
-
-<p><strong>Good:</strong></p>
-
-<ul>
-<li>Separate traffic between tenants</li>
-</ul>
-
-<p><strong>Bad:</strong></p>
-
-<ul>
-<li>Each tenant has one private network. </li>
-<li>Tenant may create two private networks, but there traffic is not separated.</li>
-<li>Now we separate the term tenant and private network: one tenant in OpenStack equivalent with a project. One project may need more than one users working on. So each tenant may need several private networks.</li>
-</ul>
-
-<h3>Each tenant has one Neutron router</h3>
-
-<p><strong>How:</strong></p>
-
-<ul>
-<li>The headline already describes it</li>
-</ul>
-
-<p><strong>Good:</strong></p>
-
-<ul>
-<li>Separate traffic between tenants</li>
-<li>Separate traffic between private network inside tenants</li>
-</ul>
-
-<p><strong>Ugly:</strong></p>
-
-<ul>
-<li>Don&#39;t know yet, I&#39;m on the way of testing</li>
-</ul>
-
-<h2>Nova-network vs Neutron network</h2>
-
-<p>Among all networking models above, nova-network only support the two first: flat and multiple-flat (VLAN). Obviously, it can&#39;t support any models with <code>neutron</code> name inside. If we choose to use nova-network, be ready to face scaling problem later. In addition, it won&#39;t support plugin-in mechadism to use third parties solutions. I don&#39;t recommend to use it unless you want to do a school project and want to save time to play video game. </p>
-
-<p>With Neutron, you have full network virtualization solution. The network is decoupled with hardware. Neutron uses an open-source product that&#39;s called Open vSwitch. When configuring Neutron, you will usually see the term OVS.   </p>
-
-<p><img src="/assets/media/neutron1.jpg" alt="OVS" title="http://www.slideshare.net/yfauser/open-stack-networking101part1"></p>
-
-<p>Note that Neutron uses plugin mechanism. That means neutron itself only define the services - L2 network abstraction - then the plugins will provides the implementation. Third parties plugins may provides some extend functions as well.</p>
-
-<p>Some well-known plugins (I-known) are <code>OVS</code>, <code>Linux Bridge</code>, <code>NEC</code>, <code>Midokura</code>, <code>Contrail</code>.</p>
-
-<h2>That&#39;s the theorical design, now get back to the ugly earth</h2>
-
-<ul>
-<li>If hosts lay on multiple data centers (DCs), is the last model has any problems?</li>
-<li>All models above can use one or two or three NICs. Idealy, they want to separate management network with the network we are discussing. But what if we have only one NIC?</li>
-</ul>
-
-<p>Based on <a href="http://docs.openstack.org/trunk/openstack-ops/content/network_design.html">this</a>, A management network (a separate network for use by your cloud operators), typically consisting of a separate switch and separate NICs (network interface cards), is a recommended option. This segregation prevents system administration and the monitoring of system access from being disrupted by traffic generated by guests. What we were talking above is Data Network between guests.</p>
+	  <p>Today, one of my collegue ask me a very interesting question: &quot;What is Cloud?&quot; I was stunned a very long minute. It&#39;s true that I don&#39;t know the answer. Then I ask him back &quot;What do you think Cloud is?&quot;. That&#39;s a start of a very interesting conversation. </p>
 
 	  </div>
 
@@ -329,13 +176,23 @@ At least one Provider network must be configured.<br></li>
 		  
 		  
 			 
+				<li><a href="/categories.html#opencloud-ref">
+					opencloud <span>(4)</span>
+					,
+				</a></li>
+			 
 				<li><a href="/categories.html#openstack-ref">
 					openstack <span>(6)</span>
 					,
 				</a></li>
 			 
-				<li><a href="/categories.html#networking-ref">
-					networking <span>(2)</span>
+				<li><a href="/categories.html#cloudstack-ref">
+					cloudstack <span>(3)</span>
+					,
+				</a></li>
+			 
+				<li><a href="/categories.html#vmware-ref">
+					vmware <span>(2)</span>
 					
 				</a></li>
 			
@@ -350,7 +207,7 @@ At least one Provider network must be configured.<br></li>
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=OpenStack networking designs notes&via=dohuyhoang88"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=What is Cloud. Why do we need it.&via=dohuyhoang88"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -378,10 +235,10 @@ At least one Provider network must be configured.<br></li>
 
 		<ul class="pager">
 		  
-		  <li class="previous disabled"><a>&larr; Previous</a></li>
+		  <li class="previous"><a href="/opencloud/openstack/cloudstack/vmware/2014/04/15/Which-OpenCloud-I-choose.html" title="Which OpenCloud I choose? OpenStack, CloudStack or VMware">&larr; Previous</a></li>
 		  
 		  
-		  <li class="next"><a href="/openstack/chef/rackspace/2014/04/15/Rackspace-chef-environment.html" title="My Rackspace chef environment">Next &rarr;</a></li>
+		  <li class="next"><a href="/devops/2014/04/22/What-is-DevOpswq.html" title="What is DevOps.">Next &rarr;</a></li>
 		  
 		</ul>
 
