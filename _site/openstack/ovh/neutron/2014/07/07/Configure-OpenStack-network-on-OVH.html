@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+	<meta charset="utf-8">
+	<title>Configure OpenStack network on OVH</title>
+	
+	<meta name="author" content="Hoang Do">
+
+	<!-- Enable responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
+
+	<!-- Le fav and touch icons -->
+	<!-- Update these with your own images
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	-->
+
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+</head>
+
+<body>
+	<nav class="navbar navbar-default visible-xs" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://github.com/dohuyhoang">
+				<i class="fa fa-github"></i>
+			</a>
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://twitter.com/dohuyhoang88">
+				<i class="fa fa-twitter"></i>
+			</a>
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="mailto:dohuyhoang88@gmail.com">
+				<i class="fa fa-envelope"></i>
+			</a>
+			
+			<a class="navbar-brand" href="/">
+				<img src="http://www.gravatar.com/avatar/?s=35" class="img-circle" />
+				A Cloudy Blog
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/categories.html">Categories</a></li>
+				<li><a href="/tags.html">Tags</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
+
+	<!-- nav-menu-dropdown -->
+	<div class="btn-group hidden-xs" id="nav-menu">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-bars"></i>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="/categories.html"><i class="fa fa-folder"></i> Categories</a></li>
+			<li><a href="/tags.html"><i class="fa fa-tags"></i> Tags</a></li>
+			<li class="divider"></li>
+			<li><a href="#"><i class="fa fa-arrow-up"></i> Top of Page</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-3 sidebar hidden-xs">
+		<! -- sidebar.html -->
+<header class="sidebar-header" role="banner">
+	<a href="/">
+		<img src="http://www.gravatar.com/avatar/?s=150" class="img-circle" />
+	</a>
+	<h3 class="title">
+        <a href="/">A Cloudy Blog</a>
+    </h3>
+</header>
+
+
+<div id="bio" class="text-center">
+	Just another CS engineer
+</div>
+
+
+<div id="contact-list" class="text-center">
+	<ul class="list-unstyled list-inline">
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://github.com/dohuyhoang">
+				<i class="fa fa-github-alt fa-lg"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://twitter.com/dohuyhoang88">
+				<i class="fa fa-twitter fa-lg"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="mailto:dohuyhoang88@gmail.com">
+				<i class="fa fa-envelope fa-lg"></i>
+			</a>
+		</li>
+		
+	</ul>
+	<ul id="contact-list-secondary" class="list-unstyled list-inline">
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://linkedin.com/in/huyhoangdo">
+				<i class="fa fa-linkedin fa-lg"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="/feed.xml">
+				<i class="fa fa-rss fa-lg"></i>
+			</a>
+		</li>
+	</ul>
+</div>
+
+	
+
+<! -- sidebar.html end -->
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3">
+		<div class="page-header">
+  <h1>Configure OpenStack network on OVH </h1>
+</div>
+	
+<article>
+
+	<div class="col-sm-10">
+	 <span class="post-date">
+	   
+	   July 
+	   7th,
+	   
+	   2014
+	 </span>
+	  <div class="article_body">
+	  <p>Configure OpenStack network on OVH servers indeed a toughest mission that I&#39;ve ever done. OVH has MAC-IP check on gateway, public IPs which has different CIDR from the host machine, public IPs may be fragmented. I managed to solve (partial) problem by various tricks.</p>
+
+<h2>Constraints of OVH networks</h2>
+
+<ul>
+<li>The OVH router only access defined MAC address, packets with strange MAC (same IP source) will be rejected. It can be tested by ping the gateway:</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo nping --icmp --icmp-type 8 --source-mac fa:16:3e:e6:78:01 176.31.105.254
+sudo nping --icmp --icmp-type 8 176.31.105.254
+</code></pre></div>
+<ul>
+<li>RIPE IPs with different CIDR is still managed by the same router, by mapping MAC address. So VMs with RIPE IP must config gateway = gateway of host. These are the RIPE IP block that I use:</li>
+</ul>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">{
+=================================
+IP              MAC
+46.105.252.216  02:00:00:c5:7a:13
+46.105.252.217  02:00:00:51:23:e0
+46.105.252.218  02:00:00:ee:60:a6
+46.105.252.219  02:00:00:85:83:df
+==================================
+</code></pre></div>
+<ul>
+<li><p>OpenStack uses NAT at gateway virtual router, so in this case, we need to change the MAC address of gateway virtual router interface.</p></li>
+<li><p>OpenStack use network namespace to separate networks. So to debug/configure OpenStack network, must run this commands with the namespace. For example, run <code>ipconfig</code> command, must use this:</p></li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo ip netns
+sudo ip netns <span class="nb">exec </span>qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a ifconfig
+</code></pre></div>
+<p>instead this:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo ifconfig
+</code></pre></div>
+<ul>
+<li>OVH ARP control: all traffic between local nodes must go through gateway (no two local nodes talking directly to each other):</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo arp -a
+vss-gw-6k.fr.eu <span class="o">(</span>176.31.105.254<span class="o">)</span> at 00:07:b4:00:00:02 <span class="o">[</span>ether<span class="o">]</span> on eth0
+controller <span class="o">(</span>176.31.105.64<span class="o">)</span> at 00:07:b4:00:00:02 <span class="o">[</span>ether<span class="o">]</span> on eth0
+</code></pre></div>
+<h2>Overview</h2>
+
+<p>This is the output of my network config:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">                             |    br-ex: 176.31.255.64    |
+                             |                            | 
+                OVH          |                    46.105.252.216               192.168.100.1
+Internet-----|gateway|-------||eth0|------------------|qg||                         |qr|--(Localnet)
+                                                        |                            |
+          176.31.255.255     176.31.255.64              |_____| neutron router |_____| 192.168.100/24                                                                       |      
+                                                                   iptables NAT                                                                              46.105.252.217 &lt;--&gt; 192.168.100.40
+                                                        46.105.252.218 &lt;--&gt; 192.168.100.41
+                                                        46.105.252.219 &lt;--&gt; 192.168.100.41
+                                                        46.105.252.216 &lt;--- 192.168.100.0/24 
+&lt;-----------OVH network-----------------&gt; &lt;-----------------OpenStack network-----------------------&gt;
+</code></pre></div>
+<ul>
+<li><code>qg</code>, <code>qr</code>: two OpenStack virtual interfaces of neutron router.</li>
+<li><code>br-ex</code>: bridge interfaces <code>eth0</code> and <code>qg</code></li>
+<li><code>neutron router</code>: use an iptables NAT to translate an floating IP to an OpenStack local network.</li>
+<li>VM without floating IP: general NAT: <code>192.168.100.0/24 --&gt; 46.105.252.216</code> (router interface)</li>
+<li>VM with floating IP:    two way NAT: <code>192.168.100.40  &lt;--&gt; 46.105.252.217</code></li>
+</ul>
+
+<h2>Prepare host networking</h2>
+
+<p>Run this script to bridge OVH network to OpenStack network</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash"><span class="c">#! /bin/bash</span>
+<span class="nb">echo</span> <span class="s2">&quot;Begin network configuration&quot;</span>
+sudo ifconfig br-ex hw ether MAC-OF-eth0
+sudo ifconfig eth0 promisc up
+sudo ovs-vsctl add-port br-ex eth0
+
+sudo route add default gw 176.31.105.254 br-ex
+sudo ifconfig br-ex 176.31.105.64
+sudo ifconfig eth0 0.0.0.0
+
+sudo service neutron-plugin-openvswitch-agent restart
+sudo service neutron-l3-agent restart
+sudo service neutron-dhcp-agent restart
+sudo service neutron-metadata-agent restart
+</code></pre></div>
+<h2>Create external network</h2>
+
+<p>Full <a href="http://docs.openstack.org/icehouse/install-guide/install/apt-debian/content/neutron-initial-networks.html">guide</a>
+External network will stand between VMs internal network and the outside network (Internet). It must have:</p>
+
+<ul>
+<li>CIDR: the same with RIPE IP block (46.105.252.216 - 46.105.252.219)</li>
+<li>Gateway: the gateway IP of host</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">neutron net-create ext-net --shared --router:external<span class="o">=</span>True
+</code></pre></div><div class="highlight"><pre><code class="bash language-bash" data-lang="bash">neutron subnet-create ext-net --name ext-subnet <span class="se">\</span>
+  --allocation-pool <span class="nv">start</span><span class="o">=</span>46.105.252.216,end<span class="o">=</span>46.105.252.219<span class="se">\</span>
+    --disable-dhcp --gateway 176.31.105.254 46.105.252.216/24
+</code></pre></div>
+<h2>Create tenant networks</h2>
+
+<p>Create a demo <code>192.168.100.1</code> network, can use CLI or dashboard:</p>
+
+<ul>
+<li>Use Dashboard: <code>Project-&gt;Network-&gt;Networks-&gt;Create Network</code></li>
+<li>Console:</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">neutron net-create demo-net
+neutron subnet-create demo-net --name demo-subnet 192.168.100.0/24
+</code></pre></div>
+<h2>Create an internal router</h2>
+
+<ul>
+<li>Dashboard: <code>Project-&gt;Network-&gt;Routers-&gt;Create Router</code></li>
+<li>Console:</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">neutron router-create demo-router
+</code></pre></div>
+<h2>Connect external network to router</h2>
+
+<p>Set gateway for router is ext-net, then connect router to demo-net:</p>
+
+<ul>
+<li>Dashboard: <code>Project-&gt;Network-&gt;Routers</code></li>
+<li>Console:</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">neutron router-interface-add demo-router demo-subnet
+neutron router-gateway-set demo-router ext-net
+</code></pre></div>
+<h2>OVH MAC address solution</h2>
+
+<h3>Check OpenStack NAT table</h3>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo ip netns <span class="nb">exec </span>qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a iptables -t nat -S
+</code></pre></div>
+<h3>Set router gateway = default gateway of host <code>176.31.105.254</code>. Add this route to Network node</h3>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo ip netns
+sudo ip netns <span class="nb">exec </span>qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a route add 176.31.105.254/32 dev qg-1cc33b0c-7d
+sudo ip netns <span class="nb">exec </span>qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a route add default gw 176.31.105.254 qg-1cc33b0c-7d
+</code></pre></div>
+<h3>Change MAC address for router gateway port, use the MAC address of the first IP in RIPE block (46.105.252.216)</h3>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo ip netns <span class="nb">exec </span>qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a ifconfig qg-1cc33b0c-7d hw ether 02:00:00:c5:7a:13
+</code></pre></div>
+<h3>Add MAC addresses of RIPE ip block to router gateway</h3>
+
+<p>OVH map each IP in RIPE with a MAC address. We must add all of these MAC addresses to OVH router.</p>
+
+<p>For example, if we have that RIPE:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">==================================================================================
+IP              MAC                     Purpose
+46.105.252.216  02:00:00:c5:7a:13       Router IP, do not change
+46.105.252.217  02:00:00:51:23:e0       Floating IP, can assign to VM
+46.105.252.218  02:00:00:ee:60:a6       Floating IP, can assign to VM
+46.105.252.219  02:00:00:85:83:df       Floating IP, can assign to VM
+===================================================================================
+</code></pre></div>
+<p>We already add the first MAC address to router gateway. Then now add the second, third, fourth MAC to gateway interface:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo ip netns <span class="nb">exec </span>qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link add link qg-0103d6fa-31 address 02:00:00:51:23:e0 eth0.1 <span class="nb">type </span>macvlan
+sudo ip netns <span class="nb">exec </span>qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link add link qg-0103d6fa-31 address 02:00:00:ee:60:a6 eth0.2 <span class="nb">type </span>macvlan
+sudo ip netns <span class="nb">exec </span>qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link add link qg-0103d6fa-31 address 02:00:00:85:83:df eth0.3 <span class="nb">type </span>macvlan
+sudo ip netns <span class="nb">exec </span>qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link <span class="nb">set </span>up eth0.1
+sudo ip netns <span class="nb">exec </span>qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link <span class="nb">set </span>up eth0.2
+sudo ip netns <span class="nb">exec </span>qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link <span class="nb">set </span>up eth0.3
+</code></pre></div>
+<h2>Modify the security group</h2>
+
+<p><strong>On dash board</strong>: <code>Project -&gt; Compute -&gt; Access &amp; Security -&gt; Securities Group -&gt; Manage Rules</code>: add ICMP, TCP port 22 rules.</p>
+
+<p><strong>Or on console</strong>:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">neutron security-group-rule-create --protocol icmp <span class="se">\</span>
+  --direction ingress --remote-ip-prefix 0.0.0.0/0 default
+
+  neutron security-group-rule-create --protocol tcp <span class="se">\</span>
+    --port-range-min 22 --port-range-max 22 <span class="se">\</span>
+      --direction ingress --remote-ip-prefix 0.0.0.0/0 default
+</code></pre></div>
+<h2>Conclusion</h2>
+
+<p>At this point, the VMs with floating IP assigned can be connected from a remote host. However, this solution doesn&#39;t tackle fragmented public IP block yet. As I remember correctly, someone has shared his solution to deal with multiple floating IP blocks by direct injecting to neutron floating ip database. I&#39;ll come up after testing that approach.</p>
+
+	  </div>
+
+		
+		<ul class="tag_box list-unstyled list-inline">
+		  <li><i class="fa fa-folder-open"></i></li>
+		  
+		  
+			 
+				<li><a href="/categories.html#openstack-ref">
+					openstack <span>(4)</span>
+					,
+				</a></li>
+			 
+				<li><a href="/categories.html#ovh-ref">
+					ovh <span>(1)</span>
+					,
+				</a></li>
+			 
+				<li><a href="/categories.html#neutron-ref">
+					neutron <span>(1)</span>
+					
+				</a></li>
+			
+		  
+		</ul>
+		  
+
+		  
+
+		<hr>
+
+		<div>
+      <section class="share col-sm-6">
+        <h4 class="section-title">Share Post</h4>
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=Configure OpenStack network on OVH&via=dohuyhoang88"
+           onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <i class="fa fa-twitter fa-lg"></i>
+          Twitter
+        </a>
+        <a class="btn btn-default btn-sm facebook" href="https://www.facebook.com/sharer/sharer.php"
+           onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <i class="fa fa-facebook fa-lg"></i>
+          Facebook
+        </a>
+        <a class="btn btn-default btn-sm gplus"
+           onclick="window.open('https://plus.google.com/share?url='+window.location.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <i class="fa fa-google-plus fa-lg"></i>
+          Google+
+        </a>
+      </section>
+
+      <section class="col-sm-6 author">
+        <img src="http://www.gravatar.com/avatar/" class="img-rounded author-image" />
+        <h4 class="section-title author-name">Hoang Do</h4>
+        <p class="author-bio">Just another CS engineer</p>
+      </section>
+    </div>
+
+    <div class="clearfix"></div>
+
+		<ul class="pager">
+		  
+		  <li class="previous"><a href="/opencloud/cloud/openstack/cloudstack/iaas/2014/04/22/OpenCloud.html" title="Introduction to OpenCloud">&larr; Previous</a></li>
+		  
+		  
+			<li class="next disabled"><a>Next &rarr;</a>
+		  
+		</ul>
+
+		<hr>
+	</div>
+	
+	<div class="col-sm-2 sidebar-2">
+	
+	</div>
+</article>
+<div class="clearfix"></div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+        var disqus_shortname = 'dohuyhoang'; 
+	        (function() {
+		         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+				           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+					            })();
+						     </script>
+						      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+						       <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+						       
+
+
+
+		<footer>
+			<hr/>
+			<p>
+				&copy; 2014 Hoang Do with Jekyll. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
+			</p>
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="/assets/resources/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/resources/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/js/app.js"></script>
+</body>
+</html>

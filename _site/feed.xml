@@ -7,6 +7,187 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Configure OpenStack network on OVH</title>
+				<description>&lt;p&gt;Configure OpenStack network on OVH servers indeed a toughest mission that I&amp;#39;ve ever done. OVH has MAC-IP check on gateway, public IPs which has different CIDR from the host machine, public IPs may be fragmented. I managed to solve (partial) problem by various tricks.&lt;/p&gt;
+
+&lt;h2&gt;Constraints of OVH networks&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The OVH router only access defined MAC address, packets with strange MAC (same IP source) will be rejected. It can be tested by ping the gateway:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo nping --icmp --icmp-type 8 --source-mac fa:16:3e:e6:78:01 176.31.105.254
+sudo nping --icmp --icmp-type 8 176.31.105.254
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;RIPE IPs with different CIDR is still managed by the same router, by mapping MAC address. So VMs with RIPE IP must config gateway = gateway of host. These are the RIPE IP block that I use:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;{
+=================================
+IP              MAC
+46.105.252.216  02:00:00:c5:7a:13
+46.105.252.217  02:00:00:51:23:e0
+46.105.252.218  02:00:00:ee:60:a6
+46.105.252.219  02:00:00:85:83:df
+==================================
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;OpenStack uses NAT at gateway virtual router, so in this case, we need to change the MAC address of gateway virtual router interface.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;OpenStack use network namespace to separate networks. So to debug/configure OpenStack network, must run this commands with the namespace. For example, run &lt;code&gt;ipconfig&lt;/code&gt; command, must use this:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo ip netns
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a ifconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;instead this:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo ifconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;OVH ARP control: all traffic between local nodes must go through gateway (no two local nodes talking directly to each other):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo arp -a
+vss-gw-6k.fr.eu &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;176.31.105.254&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 00:07:b4:00:00:02 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ether&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; on eth0
+controller &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;176.31.105.64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 00:07:b4:00:00:02 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ether&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; on eth0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;This is the output of my network config:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;                             |    br-ex: 176.31.255.64    |
+                             |                            | 
+                OVH          |                    46.105.252.216               192.168.100.1
+Internet-----|gateway|-------||eth0|------------------|qg||                         |qr|--(Localnet)
+                                                        |                            |
+          176.31.255.255     176.31.255.64              |_____| neutron router |_____| 192.168.100/24                                                                       |      
+                                                                   iptables NAT                                                                              46.105.252.217 &amp;lt;--&amp;gt; 192.168.100.40
+                                                        46.105.252.218 &amp;lt;--&amp;gt; 192.168.100.41
+                                                        46.105.252.219 &amp;lt;--&amp;gt; 192.168.100.41
+                                                        46.105.252.216 &amp;lt;--- 192.168.100.0/24 
+&amp;lt;-----------OVH network-----------------&amp;gt; &amp;lt;-----------------OpenStack network-----------------------&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;qg&lt;/code&gt;, &lt;code&gt;qr&lt;/code&gt;: two OpenStack virtual interfaces of neutron router.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;br-ex&lt;/code&gt;: bridge interfaces &lt;code&gt;eth0&lt;/code&gt; and &lt;code&gt;qg&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;neutron router&lt;/code&gt;: use an iptables NAT to translate an floating IP to an OpenStack local network.&lt;/li&gt;
+&lt;li&gt;VM without floating IP: general NAT: &lt;code&gt;192.168.100.0/24 --&amp;gt; 46.105.252.216&lt;/code&gt; (router interface)&lt;/li&gt;
+&lt;li&gt;VM with floating IP:    two way NAT: &lt;code&gt;192.168.100.40  &amp;lt;--&amp;gt; 46.105.252.217&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Prepare host networking&lt;/h2&gt;
+
+&lt;p&gt;Run this script to bridge OVH network to OpenStack network&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#! /bin/bash&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Begin network configuration&amp;quot;&lt;/span&gt;
+sudo ifconfig br-ex hw ether MAC-OF-eth0
+sudo ifconfig eth0 promisc up
+sudo ovs-vsctl add-port br-ex eth0
+
+sudo route add default gw 176.31.105.254 br-ex
+sudo ifconfig br-ex 176.31.105.64
+sudo ifconfig eth0 0.0.0.0
+
+sudo service neutron-plugin-openvswitch-agent restart
+sudo service neutron-l3-agent restart
+sudo service neutron-dhcp-agent restart
+sudo service neutron-metadata-agent restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Create external network&lt;/h2&gt;
+
+&lt;p&gt;Full &lt;a href=&quot;http://docs.openstack.org/icehouse/install-guide/install/apt-debian/content/neutron-initial-networks.html&quot;&gt;guide&lt;/a&gt;
+External network will stand between VMs internal network and the outside network (Internet). It must have:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CIDR: the same with RIPE IP block (46.105.252.216 - 46.105.252.219)&lt;/li&gt;
+&lt;li&gt;Gateway: the gateway IP of host&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;neutron net-create ext-net --shared --router:external&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;neutron subnet-create ext-net --name ext-subnet &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --allocation-pool &lt;span class=&quot;nv&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;46.105.252.216,end&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;46.105.252.219&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --disable-dhcp --gateway 176.31.105.254 46.105.252.216/24
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Create tenant networks&lt;/h2&gt;
+
+&lt;p&gt;Create a demo &lt;code&gt;192.168.100.1&lt;/code&gt; network, can use CLI or dashboard:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use Dashboard: &lt;code&gt;Project-&amp;gt;Network-&amp;gt;Networks-&amp;gt;Create Network&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Console:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;neutron net-create demo-net
+neutron subnet-create demo-net --name demo-subnet 192.168.100.0/24
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Create an internal router&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dashboard: &lt;code&gt;Project-&amp;gt;Network-&amp;gt;Routers-&amp;gt;Create Router&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Console:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;neutron router-create demo-router
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Connect external network to router&lt;/h2&gt;
+
+&lt;p&gt;Set gateway for router is ext-net, then connect router to demo-net:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dashboard: &lt;code&gt;Project-&amp;gt;Network-&amp;gt;Routers&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Console:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;neutron router-interface-add demo-router demo-subnet
+neutron router-gateway-set demo-router ext-net
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;OVH MAC address solution&lt;/h2&gt;
+
+&lt;h3&gt;Check OpenStack NAT table&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a iptables -t nat -S
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Set router gateway = default gateway of host &lt;code&gt;176.31.105.254&lt;/code&gt;. Add this route to Network node&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo ip netns
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a route add 176.31.105.254/32 dev qg-1cc33b0c-7d
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a route add default gw 176.31.105.254 qg-1cc33b0c-7d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Change MAC address for router gateway port, use the MAC address of the first IP in RIPE block (46.105.252.216)&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a ifconfig qg-1cc33b0c-7d hw ether 02:00:00:c5:7a:13
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Add MAC addresses of RIPE ip block to router gateway&lt;/h3&gt;
+
+&lt;p&gt;OVH map each IP in RIPE with a MAC address. We must add all of these MAC addresses to OVH router.&lt;/p&gt;
+
+&lt;p&gt;For example, if we have that RIPE:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;text language-text&quot; data-lang=&quot;text&quot;&gt;==================================================================================
+IP              MAC                     Purpose
+46.105.252.216  02:00:00:c5:7a:13       Router IP, do not change
+46.105.252.217  02:00:00:51:23:e0       Floating IP, can assign to VM
+46.105.252.218  02:00:00:ee:60:a6       Floating IP, can assign to VM
+46.105.252.219  02:00:00:85:83:df       Floating IP, can assign to VM
+===================================================================================
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We already add the first MAC address to router gateway. Then now add the second, third, fourth MAC to gateway interface:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link add link qg-0103d6fa-31 address 02:00:00:51:23:e0 eth0.1 &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;macvlan
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link add link qg-0103d6fa-31 address 02:00:00:ee:60:a6 eth0.2 &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;macvlan
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link add link qg-0103d6fa-31 address 02:00:00:85:83:df eth0.3 &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;macvlan
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;up eth0.1
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;up eth0.2
+sudo ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;qrouter-f918cbb7-dc0c-4713-a6f5-3c66b46e12cf ip link &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;up eth0.3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Modify the security group&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;On dash board&lt;/strong&gt;: &lt;code&gt;Project -&amp;gt; Compute -&amp;gt; Access &amp;amp; Security -&amp;gt; Securities Group -&amp;gt; Manage Rules&lt;/code&gt;: add ICMP, TCP port 22 rules.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Or on console&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;bash language-bash&quot; data-lang=&quot;bash&quot;&gt;neutron security-group-rule-create --protocol icmp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --direction ingress --remote-ip-prefix 0.0.0.0/0 default
+
+  neutron security-group-rule-create --protocol tcp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --port-range-min 22 --port-range-max 22 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+      --direction ingress --remote-ip-prefix 0.0.0.0/0 default
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;At this point, the VMs with floating IP assigned can be connected from a remote host. However, this solution doesn&amp;#39;t tackle fragmented public IP block yet. As I remember correctly, someone has shared his solution to deal with multiple floating IP blocks by direct injecting to neutron floating ip database. I&amp;#39;ll come up after testing that approach.&lt;/p&gt;
+</description>
+				<pubDate>Mon, 07 Jul 2014 18:00:00 +0200</pubDate>
+				<link>/openstack/ovh/neutron/2014/07/07/Configure-OpenStack-network-on-OVH.html</link>
+				<guid isPermaLink="true">/openstack/ovh/neutron/2014/07/07/Configure-OpenStack-network-on-OVH.html</guid>
+			</item>
+		
+			<item>
 				<title>Introduction to OpenCloud</title>
 				<description>&lt;p&gt;The &lt;strong&gt;Cloud&lt;/strong&gt; is one of the most popular term on Internet nowadays. Cloud computing is widely adopted by all scaled enterprises. By wikipedia definition, cloud computing is computing that involves a large number of computers connected through a communication network such as the Internet, similar to utility computing. In science, cloud computing is a synonym for distributed computing over a network, and means the ability to run a program or application on many connected computers at the same time.  &lt;/p&gt;
 
@@ -33,14 +214,6 @@
 				<pubDate>Tue, 22 Apr 2014 18:00:00 +0200</pubDate>
 				<link>/opencloud/cloud/openstack/cloudstack/iaas/2014/04/22/OpenCloud.html</link>
 				<guid isPermaLink="true">/opencloud/cloud/openstack/cloudstack/iaas/2014/04/22/OpenCloud.html</guid>
-			</item>
-		
-			<item>
-				<title>Inversion of Control</title>
-				<description></description>
-				<pubDate>Tue, 22 Apr 2014 18:00:00 +0200</pubDate>
-				<link>/software/design/java/2014/04/22/IoC.html</link>
-				<guid isPermaLink="true">/software/design/java/2014/04/22/IoC.html</guid>
 			</item>
 		
 			<item>
@@ -92,15 +265,6 @@ But the one who need it the most is the companies with very frequent releases. F
 				<pubDate>Tue, 22 Apr 2014 16:00:00 +0200</pubDate>
 				<link>/devops/2014/04/22/What-is-DevOpswq.html</link>
 				<guid isPermaLink="true">/devops/2014/04/22/What-is-DevOpswq.html</guid>
-			</item>
-		
-			<item>
-				<title>What is Cloud. Why do we need it.</title>
-				<description>&lt;p&gt;Today, one of my collegue ask me a very interesting question: &amp;quot;What is Cloud?&amp;quot; I was stunned a very long minute. It&amp;#39;s true that I don&amp;#39;t know the answer. Then I ask him back &amp;quot;What do you think Cloud is?&amp;quot;. That&amp;#39;s a start of a very interesting conversation. &lt;/p&gt;
-</description>
-				<pubDate>Fri, 18 Apr 2014 12:00:00 +0200</pubDate>
-				<link>/opencloud/openstack/cloudstack/vmware/2014/04/18/What-is-Cloud-Why-we-need-it.html</link>
-				<guid isPermaLink="true">/opencloud/openstack/cloudstack/vmware/2014/04/18/What-is-Cloud-Why-we-need-it.html</guid>
 			</item>
 		
 			<item>
@@ -193,42 +357,6 @@ and Amazon AWS like services, then OpenStack is the way to go.&lt;/em&gt;&lt;/li
 			</item>
 		
 			<item>
-				<title>Introduce Rackspace Private Cloud Networking</title>
-				<description>&lt;h1&gt;Rackspace Private Cloud networking&lt;/h1&gt;
-
-&lt;h2&gt;OpenStack networking concepts&lt;/h2&gt;
-
-&lt;p&gt;In OpenStack neutron, there are two types of networks:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Provider network&lt;/strong&gt;: simply speaking, it is a physical network inside (or between) your DCs. This network is shared between tenants. There are two way of config this network:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Flat (untagged)&lt;/li&gt;
-&lt;li&gt;VLAN (tagged)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Tenant network&lt;/strong&gt;: or virtual network inside connect each tenant. Of course, it is not shared between 2 tenant. However, two tenant network may connect to each other using a Neutron virtual router + L3 (Layer 3) agent. This type of network may be configed using: &lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;vlan (tagged)&lt;/li&gt;
-&lt;li&gt;gre (unique id)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Network design&lt;/h2&gt;
-
-&lt;h3&gt;Flat network&lt;/h3&gt;
-
-&lt;p&gt;Most basic design. Physical network resides in the same broadcast domain.&lt;/p&gt;
-
-&lt;p&gt;Check out the &lt;a href=&quot;http://www.rackspace.com/knowledge_center/article/about-rackspace-private-cloud&quot;&gt;Rackspace knowledge center&lt;/a&gt; for more information&lt;/p&gt;
-</description>
-				<pubDate>Tue, 15 Apr 2014 15:52:47 +0200</pubDate>
-				<link>/openstack/rackspace/opencloud/networking/2014/04/15/Rackspace-private-cloud-networking.html</link>
-				<guid isPermaLink="true">/openstack/rackspace/opencloud/networking/2014/04/15/Rackspace-private-cloud-networking.html</guid>
-			</item>
-		
-			<item>
 				<title>My Rackspace chef environment</title>
 				<description>&lt;p&gt;This is a note of how I change Rackspace Private Cloud (RPC) chef&amp;#39;s environment before bootstrap own nodes.&lt;/p&gt;
 
@@ -279,168 +407,6 @@ and Amazon AWS like services, then OpenStack is the way to go.&lt;/em&gt;&lt;/li
 				<pubDate>Tue, 15 Apr 2014 15:52:47 +0200</pubDate>
 				<link>/openstack/chef/rackspace/2014/04/15/Rackspace-chef-environment.html</link>
 				<guid isPermaLink="true">/openstack/chef/rackspace/2014/04/15/Rackspace-chef-environment.html</guid>
-			</item>
-		
-			<item>
-				<title>OpenStack networking designs notes</title>
-				<description>&lt;h1&gt;OpenStack networking designs&lt;/h1&gt;
-
-&lt;p&gt;Based on this &lt;a href=&quot;http://www.slideshare.net/lowescott/an-introduction-to-openstack-networking&quot;&gt;slice&lt;/a&gt; of Scott Lowe and my testing results.&lt;/p&gt;
-
-&lt;h2&gt;What should we know about OpenStack networking&lt;/h2&gt;
-
-&lt;p&gt;There are two types of network in OpenStack Neutron:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Provider network&lt;/strong&gt;: or physical network inside/between DCs. Possible designs:
-
-&lt;ul&gt;
-&lt;li&gt;Flat (untagged): all hosts in the same network domain.&lt;/li&gt;
-&lt;li&gt;VLAN (tagged): separate physical broadcast domain by using tagged switch.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Tenant network&lt;/strong&gt;: logical network between VMs. Both methods below support separated network.
-
-&lt;ul&gt;
-&lt;li&gt;GRE (unique id)&lt;/li&gt;
-&lt;li&gt;VLAN (tagged)
-At least one Provider network must be configured.&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://developer.rackspace.com/blog/neutron-networking-the-building-blocks-of-an-openstack-cloud.html&quot;&gt;Network concepts&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2&gt;Deployment models&lt;/h2&gt;
-
-&lt;h3&gt;Flat network&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The most simple deployment.&lt;/li&gt;
-&lt;li&gt;Use only one provider network. &lt;/li&gt;
-&lt;li&gt;Don&amp;#39;t use any tenant network at all. All tenants share an IP pool.&lt;/li&gt;
-&lt;li&gt;VMs get IPs directly from provider network.&lt;/li&gt;
-&lt;li&gt;No need any neutron function.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Simple, can use for testing&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Bad:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;One broadcast domain. &lt;/li&gt;
-&lt;li&gt;Sniffing packets of other tenants.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Multiple flat network&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Use VLAN (need physical switch support) to separate Provider networks.&lt;/li&gt;
-&lt;li&gt;Multiple providers networks&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Note:&lt;/strong&gt; one VM can lay on two VLAN by configuring two IPs for it.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Network separation between tenant. Congrat!&lt;/li&gt;
-&lt;li&gt;Multiple broadcast domains&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Bad:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Need hardware configuration (Switch)&lt;/li&gt;
-&lt;li&gt;Scaling needs configuring HW (create new VLAN)&lt;/li&gt;
-&lt;li&gt;Creating new tenant networks needs configuring HW (omg T.T)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Mixed flat and private network&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Based on one flat network model: one provider network.&lt;/li&gt;
-&lt;li&gt;Don&amp;#39;t use Neutron router. &lt;/li&gt;
-&lt;li&gt;Each VM has private IP.&lt;/li&gt;
-&lt;li&gt;Traffic is encapsulate for tenant network communication. Ensure the security, but the broadcast domain is not separated.&lt;/li&gt;
-&lt;li&gt;They may use some Linux Bridge/IPSec technologies, I&amp;#39;m not sure.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;One Neutron router in front of private (tenant) networks&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Based on Mixed flat and private network, no use physical switch (physical VLAN)&lt;/li&gt;
-&lt;li&gt;Put a Neutron router (virtual router) in front of private networks.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Separate traffic between tenants&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Bad:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Each tenant has one private network. &lt;/li&gt;
-&lt;li&gt;Tenant may create two private networks, but there traffic is not separated.&lt;/li&gt;
-&lt;li&gt;Now we separate the term tenant and private network: one tenant in OpenStack equivalent with a project. One project may need more than one users working on. So each tenant may need several private networks.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Each tenant has one Neutron router&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;How:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The headline already describes it&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Separate traffic between tenants&lt;/li&gt;
-&lt;li&gt;Separate traffic between private network inside tenants&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;Ugly:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Don&amp;#39;t know yet, I&amp;#39;m on the way of testing&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Nova-network vs Neutron network&lt;/h2&gt;
-
-&lt;p&gt;Among all networking models above, nova-network only support the two first: flat and multiple-flat (VLAN). Obviously, it can&amp;#39;t support any models with &lt;code&gt;neutron&lt;/code&gt; name inside. If we choose to use nova-network, be ready to face scaling problem later. In addition, it won&amp;#39;t support plugin-in mechadism to use third parties solutions. I don&amp;#39;t recommend to use it unless you want to do a school project and want to save time to play video game. &lt;/p&gt;
-
-&lt;p&gt;With Neutron, you have full network virtualization solution. The network is decoupled with hardware. Neutron uses an open-source product that&amp;#39;s called Open vSwitch. When configuring Neutron, you will usually see the term OVS.   &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/media/neutron1.jpg&quot; alt=&quot;OVS&quot; title=&quot;http://www.slideshare.net/yfauser/open-stack-networking101part1&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;Note that Neutron uses plugin mechanism. That means neutron itself only define the services - L2 network abstraction - then the plugins will provides the implementation. Third parties plugins may provides some extend functions as well.&lt;/p&gt;
-
-&lt;p&gt;Some well-known plugins (I-known) are &lt;code&gt;OVS&lt;/code&gt;, &lt;code&gt;Linux Bridge&lt;/code&gt;, &lt;code&gt;NEC&lt;/code&gt;, &lt;code&gt;Midokura&lt;/code&gt;, &lt;code&gt;Contrail&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2&gt;That&amp;#39;s the theorical design, now get back to the ugly earth&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;If hosts lay on multiple data centers (DCs), is the last model has any problems?&lt;/li&gt;
-&lt;li&gt;All models above can use one or two or three NICs. Idealy, they want to separate management network with the network we are discussing. But what if we have only one NIC?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Based on &lt;a href=&quot;http://docs.openstack.org/trunk/openstack-ops/content/network_design.html&quot;&gt;this&lt;/a&gt;, A management network (a separate network for use by your cloud operators), typically consisting of a separate switch and separate NICs (network interface cards), is a recommended option. This segregation prevents system administration and the monitoring of system access from being disrupted by traffic generated by guests. What we were talking above is Data Network between guests.&lt;/p&gt;
-</description>
-				<pubDate>Tue, 15 Apr 2014 15:52:47 +0200</pubDate>
-				<link>/openstack/networking/2014/04/15/OpenStack-networking-notes.html</link>
-				<guid isPermaLink="true">/openstack/networking/2014/04/15/OpenStack-networking-notes.html</guid>
 			</item>
 		
 	</channel>

@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 	<meta charset="utf-8">
-	<title>What is DevOps.</title>
+	<title>Introduce Rackspace Private Cloud Networking</title>
 	
 	<meta name="author" content="Hoang Do">
 
@@ -152,7 +152,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>What is DevOps. </h1>
+  <h1>Introduce Rackspace Private Cloud Networking </h1>
 </div>
 	
 <article>
@@ -161,54 +161,41 @@
 	 <span class="post-date">
 	   
 	   April 
-	   22nd,
-	     
+	   15th,
+	   
 	   2014
 	 </span>
 	  <div class="article_body">
-	  <p>I&#39;m not an expert in DevOps myself. This blog is merely a digest note from my reading and very little experience. I&#39;m intending to update it when I gain more experience or from your help. </p>
+	  <p>Rackspace Private Cloud (codename Alamo)</p>
 
-<h1>What is DevOps</h1>
+<h1>Rackspace Private Cloud networking</h1>
 
-<p>DevOps stands for Development and Operations. First of all, it&#39;s an &quot;another&quot; software development methodology. Of course, as other siblings, this methodology is created to solve some problem in software world. </p>
+<h2>OpenStack networking concepts</h2>
 
-<p><img src="http://upload.wikimedia.org/wikipedia/commons/b/b5/Devops.svg" alt="Wiki"></p>
-
-<h2>The problem</h2>
-
-<p>Simply speaking, development guys and operations guys are enemy of each other. Development means to change and evolve. While operations need stability. Some statistic numbers: 80% downtime is due to changes. 47% of total time dedicated to deployment.</p>
-
-<p>But of course we need development. The problem is the misunderstanding between Dev and Ops, that we call <strong>The wall of Confusion</strong>. To add fuel into the fire, many global companies have Dev team in Vietnam and Ops team in Europe. Geometry distance will enlarge the wall. </p>
-
-<p>The worst day is <strong>release/deployment</strong> day, when changes are pushed from Dev team to Ops team. The most typical problem is the differences in environment between Dev and Ops. The Ops team has to hack the product, modify all configuration files. And when they give up, changes will be rolled back in Ops, bugs are reported to Devs, and Dev guys will say f**k  </p>
-
-<h2>The solution</h2>
-
-<p>DevOps focuses on communication. Cooperation between Dev and Ops must start before and continues long after release/deployment. </p>
-
-<p>We should also considering the voices again DevOps. I read <a href="http://jeffknupp.com/blog/2014/04/15/how-devops-is-killing-the-developer/">an article</a> of Jeff Knupp, and I think his point of view is interesting (not that I agree). He complained force a developer to handle tasks of QA, sysadmin, analyst. That&#39;s the birth of &quot;full-stack&quot; developer, and some traditional dev who only love programming will feel annoyed (not in my case definitely). </p>
-
-<p>Not so convinced?</p>
-
-<h2>Which companies used DevOps</h2>
-
-<p>All of software companies can use it, of course. 
-But the one who need it the most is the companies with very frequent releases. For example, Flickr with 10 deployments per day. Facebook with 1 deployment each day. Amazon with a deployment per 11 seconds.   </p>
-
-<h2>Ok I&#39;ll use DevOps, but how to use?</h2>
-
-<p>As mentioned above, DevOps is a methodology. That means you need tools, training, changes in approach, changes in culture, etc. to adopt it. The following is just some tips based on my experience to help. </p>
+<p>In OpenStack neutron, there are two types of networks:</p>
 
 <ul>
-<li><p><strong>Chef</strong>: with chef, you write the code to configure the infrastructure (infrastructure as a code). The good point is you don&#39;t have to worry about the different in env between Dev and Ops. You can check this <a href="http://www.slideshare.net/JulianDunn/chef-introduction-princeton-meetup">slide</a> for more info.</p></li>
-<li><p><strong>Docker</strong>: provide a unique sandbox environment for apps. It&#39;s quite popular now, and is a competitor of Chef.</p></li>
-<li><p><strong>The culture</strong>: train dev with QA, sysadmin roles. Train sysadmin how to program. Build a team with both of them.  </p></li>
-<li><p><strong>Deploying</strong>: deploy frequently. A deploy with smaller code changes is better than an upgrade with hundred files changes. </p></li>
+<li><p><strong>Provider network</strong>: simply speaking, it is a physical network inside (or between) your DCs. This network is shared between tenants. There are two way of config this network:</p>
+
+<ul>
+<li>Flat (untagged)</li>
+<li>VLAN (tagged)</li>
+</ul></li>
+<li><p><strong>Tenant network</strong>: or virtual network inside connect each tenant. Of course, it is not shared between 2 tenant. However, two tenant network may connect to each other using a Neutron virtual router + L3 (Layer 3) agent. This type of network may be configed using: </p>
+
+<ul>
+<li>vlan (tagged)</li>
+<li>gre (unique id)</li>
+</ul></li>
 </ul>
 
-<p>This <a href="http://www.slideshare.net/OCTOTechnology/introduction-to-devops-28779951">slides</a> provides plenty good examples. </p>
+<h2>Network design</h2>
 
-<p>Now it&#39;s your turn to help. Please sharing your own experience using DevOps. </p>
+<h3>Flat network</h3>
+
+<p>Most basic design. Physical network resides in the same broadcast domain.</p>
+
+<p>Check out the <a href="http://www.rackspace.com/knowledge_center/article/about-rackspace-private-cloud">Rackspace knowledge center</a> for more information</p>
 
 	  </div>
 
@@ -218,8 +205,8 @@ But the one who need it the most is the companies with very frequent releases. F
 		  
 		  
 			 
-				<li><a href="/categories.html#devops-ref">
-					devops <span>(1)</span>
+				<li><a href="/categories.html#OpenStack Rackspace OpenCloud Networking-ref">
+					OpenStack Rackspace OpenCloud Networking <span>()</span>
 					
 				</a></li>
 			
@@ -227,6 +214,15 @@ But the one who need it the most is the companies with very frequent releases. F
 		</ul>
 		  
 
+		
+		<ul class="list-inline">
+		  <li><i class="fa fa-tags"></i></li>
+		  
+		  
+			
+		  
+		  
+		</ul>
 		  
 
 		<hr>
@@ -234,7 +230,7 @@ But the one who need it the most is the companies with very frequent releases. F
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=What is DevOps.&via=dohuyhoang88"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=Introduce Rackspace Private Cloud Networking&via=dohuyhoang88"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -262,10 +258,10 @@ But the one who need it the most is the companies with very frequent releases. F
 
 		<ul class="pager">
 		  
-		  <li class="previous"><a href="/opencloud/openstack/cloudstack/vmware/2014/04/15/Which-OpenCloud-I-choose.html" title="Which OpenCloud I choose? OpenStack, CloudStack or VMware">&larr; Previous</a></li>
+		  <li class="previous disabled"><a>&larr; Previous</a></li>
 		  
 		  
-		  <li class="next"><a href="/opencloud/cloud/openstack/cloudstack/iaas/2014/04/22/OpenCloud.html" title="Introduction to OpenCloud">Next &rarr;</a></li>
+			<li class="next disabled"><a>Next &rarr;</a>
 		  
 		</ul>
 
