@@ -63,7 +63,7 @@ This is the output of my network config:
                 OVH          |                    46.105.252.216               192.168.100.1
 Internet-----|gateway|-------||eth0|------------------|qg||                         |qr|--(Localnet)
                                                         |                            |
-          176.31.255.255     176.31.255.64              |_____| neutron router |_____| 192.168.100/24                                                                       |      
+          176.31.255.254     176.31.255.64              |_____| neutron router |_____| 192.168.100/24                                                                       |      
                                                                    iptables NAT                                                                              46.105.252.217 <--> 192.168.100.40
                                                         46.105.252.218 <--> 192.168.100.41
                                                         46.105.252.219 <--> 192.168.100.41
@@ -155,6 +155,8 @@ neutron router-gateway-set demo-router ext-net
 ```
 
 ## OVH MAC address solution
+
+Now we come to the main trick: tackle OVH MAC-IP check on router. 
 
 ### Check OpenStack NAT table
 
