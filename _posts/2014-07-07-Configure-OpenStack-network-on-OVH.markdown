@@ -5,7 +5,7 @@ date:   2014-07-07 16:00:00
 categories: OpenStack OVH neutron
 ---
 
-Configure OpenStack network on OVH servers indeed a toughest mission that I've ever done. OVH has MAC-IP check on gateway, public IPs which has different CIDR from the host machine, public IPs may be fragmented. I managed to solve (partial) problem by various tricks.
+Configure OpenStack network on OVH servers was indeed a toughest mission that I've ever done. OVH has MAC-IP check on gateway, public IPs which has different CIDR from the host machine, public IPs may be fragmented, which OpenStack doesn't support. I managed to solve (partial) problem by various tricks.
 
 
 ## Constraints of OVH networks
