@@ -29,6 +29,15 @@
 	-->
 
 	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+	<script>
+function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-53314817-1', 'auto');
+ga('send', 'pageview');
+</script>
+
 </head>
 
 <body>
@@ -166,7 +175,7 @@
 	   2014
 	 </span>
 	  <div class="article_body">
-	  <p>Configure OpenStack network on OVH servers indeed a toughest mission that I&#39;ve ever done. OVH has MAC-IP check on gateway, public IPs which has different CIDR from the host machine, public IPs may be fragmented. I managed to solve (partial) problem by various tricks.</p>
+	  <p>Configure OpenStack network on OVH servers was indeed a toughest mission that I&#39;ve ever done. OVH has MAC-IP check on gateway, public IPs which has different CIDR from the host machine, public IPs may be fragmented, which OpenStack doesn&#39;t support. I managed to solve (partial) problem by various tricks.</p>
 
 <h2>Constraints of OVH networks</h2>
 
@@ -179,8 +188,7 @@ sudo nping --icmp --icmp-type 8 176.31.105.254
 <ul>
 <li>RIPE IPs with different CIDR is still managed by the same router, by mapping MAC address. So VMs with RIPE IP must config gateway = gateway of host. These are the RIPE IP block that I use:</li>
 </ul>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">{
-=================================
+<div class="highlight"><pre><code class="text language-text" data-lang="text">=================================
 IP              MAC
 46.105.252.216  02:00:00:c5:7a:13
 46.105.252.217  02:00:00:51:23:e0
@@ -213,7 +221,7 @@ controller <span class="o">(</span>176.31.105.64<span class="o">)</span> at 00:0
                 OVH          |                    46.105.252.216               192.168.100.1
 Internet-----|gateway|-------||eth0|------------------|qg||                         |qr|--(Localnet)
                                                         |                            |
-          176.31.255.255     176.31.255.64              |_____| neutron router |_____| 192.168.100/24                                                                       |      
+          176.31.255.254     176.31.255.64              |_____| neutron router |_____| 192.168.100/24                                                                       |      
                                                                    iptables NAT                                                                              46.105.252.217 &lt;--&gt; 192.168.100.40
                                                         46.105.252.218 &lt;--&gt; 192.168.100.41
                                                         46.105.252.219 &lt;--&gt; 192.168.100.41
@@ -291,6 +299,8 @@ neutron subnet-create demo-net --name demo-subnet 192.168.100.0/24
 neutron router-gateway-set demo-router ext-net
 </code></pre></div>
 <h2>OVH MAC address solution</h2>
+
+<p>Now we come to the main trick: tackle OVH MAC-IP check on router. </p>
 
 <h3>Check OpenStack NAT table</h3>
 <div class="highlight"><pre><code class="bash language-bash" data-lang="bash">sudo ip netns <span class="nb">exec </span>qrouter-d1ceaf19-4cf0-4334-9f96-7601c70cbf4a iptables -t nat -S
@@ -445,3 +455,4 @@ sudo ip netns <span class="nb">exec </span>qrouter-f918cbb7-dc0c-4713-a6f5-3c66b
 	<script type="text/javascript" src="/assets/js/app.js"></script>
 </body>
 </html>
+
